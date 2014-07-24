@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from objectifier import metadata
+from pinboard import metadata
 
 with open(os.path.join(os.path.dirname(__file__), "README.rst")) as file:
     long_description = file.read()
