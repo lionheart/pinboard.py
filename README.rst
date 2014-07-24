@@ -31,7 +31,11 @@ Retrieve All Bookmarks
 
    >>> pb.posts.all()
 
-   # Retrieve a single bookmark
+Retrieve a single bookmark
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: pycon
+
    >>> bookmark = pb.posts.all(results=1)[0]
    <Bookmark title="Of Princesses and Dragons — Medium" url="medium.com">
 
