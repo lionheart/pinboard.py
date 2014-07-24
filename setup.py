@@ -4,6 +4,11 @@
 import os
 from pinboard import metadata
 
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
 with open(os.path.join(os.path.dirname(__file__), "README.rst")) as file:
     long_description = file.read()
 
