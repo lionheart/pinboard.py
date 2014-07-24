@@ -40,9 +40,6 @@ class Bookmark(object):
     def delete(self):
         return self.pinboard.posts.delete(url=self.url)
 
-    def __del__(self):
-        self.delete()
-
 
 class Tag(object):
     def __init__(self, key, value):
