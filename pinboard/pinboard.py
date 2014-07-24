@@ -76,7 +76,6 @@ class PinboardCall(object):
                 json_response['posts'] = map(lambda k: Bookmark(k), json_response['posts'])
 
             return json_response
-
         else:
             return response
 
