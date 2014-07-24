@@ -12,6 +12,8 @@ Pinboard.py is available for download through the Python Package Index (PyPi). Y
 
    pip install pinboard
 
+No dependencies, except Python 2.7.
+
 Usage
 -----
 
