@@ -10,31 +10,39 @@ class Bookmark(object):
         self.title = payload['description']
         self.description = payload['extended']
         self.url = payload['href']
-        self.time = payload['time']
         self.meta = payload['meta']
         self.hash = payload['hash']
         self.shared = payload['shared'] == "yes"
         self.toread = payload['toread'] == "yes"
         self.tags = payload['tags'].split(' ')
+        self.time = date_parser.parse(payload['time'])
         self.token = token
 
     @property
     def pinboard(self):
         return Pinboard(self.token)
 
+    @property
+    def dt(self):
+        return self.time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
     def __repr__(self):
         parse_result = urllib2.urlparse.urlparse(self.url)
         return "<Bookmark title=\"{}\" url=\"{}\">".format(self.title.encode("utf-8"), parse_result.netloc)
 
-    def save(self):
+    def save(self, update_time=False):
         params = {
             'url': self.url,
             'description': self.title,
             'extended': self.description,
-            'tags': ' '.join(self.tags),
+            'tags': self.tags,
             'shared': "yes" if self.shared else "no",
             'toread': "yes" if self.toread else "no",
         }
+
+        if update_time:
+            params['dt'] = self.dt
+
         return self.pinboard.posts.add(**params)
 
     def delete(self):

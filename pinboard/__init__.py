@@ -1,4 +1,6 @@
 from .pinboard import Pinboard
+from .pinboard import Bookmark
+from .pinboard import Tag
 
 from .metadata import (
     __author__,
@@ -17,5 +19,7 @@ __all__ = [
     '__maintainer__',
     '__version__',
     'Pinboard',
+    'Bookmark',
+    'Tag'
 ]
 
