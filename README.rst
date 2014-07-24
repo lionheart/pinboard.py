@@ -39,6 +39,10 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
    >>> bookmark.save()
    {u'result_code': u'done'}
 
+   # You can also save a bookmark without a bookmark object
+   >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", tags=["search", "tools"])
+   {u'result_code': u'done'}
+
    # If you want to update the bookmark creation date, you need to manually override that
    >>> import datetime
    >>> bookmark.time = datetime.datetime.now() - datetime.timedelta(days=5)
@@ -46,6 +50,8 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
 
    # Retrieve all tags
    >>> pb.tags.get()
+
+In general, Pinboard.py maps 1-1 to the Pinboard API. Please read the `Pinboard API documentation <https://pinboard.in/api/>`_ for other methods and parameters.
 
 License
 -------
