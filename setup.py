@@ -32,5 +32,6 @@ setup(
     author=metadata.__author__,
     author_email=metadata.__email__,
     packages=['pinboard'],
-    package_data={'': ['LICENSE', 'README.rst']}
+    package_data={'': ['LICENSE', 'README.rst']},
+    # scripts=['scripts/pinboard']
 )
