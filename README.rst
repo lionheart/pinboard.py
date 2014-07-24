@@ -33,6 +33,9 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
    >>> bookmark = pb.posts.all(results=1)[0]
    <Bookmark title="Of Princesses and Dragons — Medium" url="medium.com">
 
+   >>> bookmark.time
+   datetime.datetime(2014, 7, 21, 11, 11, 59)
+
    # Make a change to a bookmark and save it
    >>> bookmark.title = "Of Princesses and Dragons"
    >>> bookmark.tags = ["blogs", "interesting"]
@@ -43,7 +46,7 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
    >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", tags=["search", "tools"])
    {u'result_code': u'done'}
 
-   # If you want to update the bookmark creation date, you need to manually override that
+   # If you want to update the bookmark creation date as well, you'll need to pass in `update_time=True` to the save method
    >>> import datetime
    >>> bookmark.time = datetime.datetime.now() - datetime.timedelta(days=5)
    >>> bookmark.save(update_time=True)
@@ -51,7 +54,15 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
    # Retrieve all tags
    >>> pb.tags.get()
 
-In general, Pinboard.py maps 1-1 to the Pinboard API. Please read the `Pinboard API documentation <https://pinboard.in/api/>`_ for other methods and parameters.
+   # By default, the Pinboard object will return parsed JSON objects. If you'd like the raw response object, just pass in `parse_response=False`
+   >>> response = pb.tags.get(parse_response=False)
+   >>> response
+   <addinfourl at 4396047680 whose fp = <socket._fileobject object at 0x105f79850>>
+   >>> response.read()
+   ... your tags ...
+
+Pinboard.py maps 1-1 to the Pinboard API. For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
+
 
 License
 -------

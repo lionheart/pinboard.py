@@ -1,9 +1,11 @@
+import datetime
+import json
 import operator
-import requests
+import urllib
 import urllib2
-from dateutil import parser as date_parser
 
 PINBOARD_API_ENDPOINT = "https://api.pinboard.in/v1/"
+PINBOARD_DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 class Bookmark(object):
     def __init__(self, payload, token):
@@ -15,7 +17,7 @@ class Bookmark(object):
         self.shared = payload['shared'] == "yes"
         self.toread = payload['toread'] == "yes"
         self.tags = payload['tags'].split(' ')
-        self.time = date_parser.parse(payload['time'])
+        self.time = Pinboard.datetime_from_string(payload['time'])
         self.token = token
 
     @property
@@ -24,7 +26,7 @@ class Bookmark(object):
 
     @property
     def dt(self):
-        return self.time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return Pinboard.string_from_datetime(self.time)
 
     def __repr__(self):
         parse_result = urllib2.urlparse.urlparse(self.url)
@@ -68,6 +70,14 @@ class Pinboard(object):
     def __getattr__(self, k):
         return PinboardCall(self.token, k)
 
+    @staticmethod
+    def datetime_from_string(value):
+        return datetime.datetime.strptime(value, PINBOARD_DATE_FORMAT)
+
+    @staticmethod
+    def string_from_datetime(dt):
+        return dt.strftime(PINBOARD_DATE_FORMAT)
+
 
 class PinboardCall(object):
     def __init__(self, token, path):
@@ -81,12 +91,12 @@ class PinboardCall(object):
     def __call__(self, *args, **kwargs):
         url = "{}{}".format(PINBOARD_API_ENDPOINT, "/".join(self.components))
 
-        parse_json = kwargs.get('parse_json', True)
+        parse_response = kwargs.get('parse_response', True)
 
         params = kwargs.copy()
 
-        if 'parse_json' in params:
-            del params['parse_json']
+        if 'parse_response' in params:
+            del params['parse_response']
 
         for field in Pinboard.BOOLEAN_FIELDS:
             if field in kwargs:
@@ -99,13 +109,20 @@ class PinboardCall(object):
         params['format'] = "json"
         params['auth_token'] = self.token
 
-        response = requests.get(url, params=params)
+        query_string = urllib.urlencode(params)
 
-        if parse_json:
-            json_response = response.json()
+        url = "{}?{}".format(url, query_string)
+
+        request = urllib2.Request(url)
+
+        opener = urllib2.build_opener(urllib2.HTTPSHandler)
+        response = opener.open(request)
+
+        if parse_response:
+            json_response = json.load(response)
 
             if 'date' in json_response:
-                json_response['date'] = date_parser.parse(json_response['date'])
+                json_response['date'] = Pinboard.datetime_from_string(json_response['date'])
 
             if self.components == ["posts", "all"]:
                 return map(lambda k: Bookmark(k, self.token), json_response)
