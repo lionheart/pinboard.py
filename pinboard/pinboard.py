@@ -1,3 +1,4 @@
+import operator
 import requests
 import urllib2
 from dateutil import parser as date_parser
@@ -5,7 +6,7 @@ from dateutil import parser as date_parser
 PINBOARD_API_ENDPOINT = "https://api.pinboard.in/v1/"
 
 class Bookmark(object):
-    def __init__(self, payload):
+    def __init__(self, payload, token):
         self.title = payload['description']
         self.description = payload['extended']
         self.url = payload['href']
@@ -15,10 +16,41 @@ class Bookmark(object):
         self.shared = payload['shared'] == "yes"
         self.toread = payload['toread'] == "yes"
         self.tags = payload['tags'].split(' ')
+        self.token = token
+
+    @property
+    def pinboard(self):
+        return Pinboard(self.token)
 
     def __repr__(self):
         parse_result = urllib2.urlparse.urlparse(self.url)
-        return "<Bookmark title='{}' url='{}'>".format(self.title.encode("utf-8"), parse_result.netloc)
+        return "<Bookmark title=\"{}\" url=\"{}\">".format(self.title.encode("utf-8"), parse_result.netloc)
+
+    def save(self):
+        params = {
+            'url': self.url,
+            'description': self.title,
+            'extended': self.description,
+            'tags': ' '.join(self.tags),
+            'shared': "yes" if self.shared else "no",
+            'toread': "yes" if self.toread else "no",
+        }
+        return self.pinboard.posts.add(**params)
+
+    def delete(self):
+        return self.pinboard.posts.delete(url=self.url)
+
+    def __del__(self):
+        self.delete()
+
+
+class Tag(object):
+    def __init__(self, key, value):
+        self.name = key
+        self.count = int(value)
+
+    def __repr__(self):
+        return "<Tag name=\"{}\" count={}>".format(self.name, self.count)
 
 
 class Pinboard(object):
@@ -70,10 +102,14 @@ class PinboardCall(object):
             if 'date' in json_response:
                 json_response['date'] = date_parser.parse(json_response['date'])
 
-            if isinstance(json_response, list):
-                return map(lambda k: Bookmark(k), json_response)
-            elif 'posts' in json_response:
-                json_response['posts'] = map(lambda k: Bookmark(k), json_response['posts'])
+            if self.components == ["posts", "all"]:
+                return map(lambda k: Bookmark(k, self.token), json_response)
+            elif self.components in [["posts", "get"], ["posts", "recent"]]:
+                json_response['posts'] = map(lambda k: Bookmark(k, self.token), json_response['posts'])
+            elif self.components == ["tags", "get"]:
+                tags = [Tag(k, v) for k, v in json_response.iteritems()]
+                tags.sort(key=operator.attrgetter('name'))
+                return tags
 
             return json_response
         else:
