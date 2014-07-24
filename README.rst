@@ -63,6 +63,10 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
 
 Pinboard.py maps 1-1 to the Pinboard API (e.g., pb.one.two.three() will send a request to "https://api.pinboard.in/v1/one/two/three"). For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
 
+TODOs
+-----
+
+A command-line utility? Who knows. The future is bright.
 
 License
 -------
