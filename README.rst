@@ -39,6 +39,11 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
    >>> bookmark.save()
    {u'result_code': u'done'}
 
+   # If you want to update the bookmark creation date, you need to manually override that
+   >>> import datetime
+   >>> bookmark.time = datetime.datetime.now() - datetime.timedelta(days=5)
+   >>> bookmark.save(update_time=True)
+
    # Retrieve all tags
    >>> pb.tags.get()
 
