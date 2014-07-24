@@ -24,18 +24,12 @@ To get started, you're going to need to get your Pinboard API token from the `pa
 
 Once you've done this, you can now use the `pb` object to make calls to the Pinboard API. Here are some examples:
 
-Retrieve All Bookmarks
-^^^^^^^^^^^^^^^^^^^^^^
-
 .. code:: pycon
 
+   # Retrieve all bookmarks
    >>> pb.posts.all()
 
-Retrieve a single bookmark
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code:: pycon
-
+   # Retrieve a single bookmark
    >>> bookmark = pb.posts.all(results=1)[0]
    <Bookmark title="Of Princesses and Dragons — Medium" url="medium.com">
 
@@ -67,7 +61,7 @@ Retrieve a single bookmark
    >>> response.read()
    ... your tags ...
 
-Pinboard.py maps 1-1 to the Pinboard API. For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
+Pinboard.py maps 1-1 to the Pinboard API (e.g., pb.one.two.three() will send a request to "https://api.pinboard.in/v1/one/two/three"). For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
 
 
 License
