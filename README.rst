@@ -24,9 +24,11 @@ To get started, you're going to need to get your Pinboard API token from the `pa
 
 Once you've done this, you can now use the `pb` object to make calls to the Pinboard API. Here are some examples:
 
+Retrieve All Bookmarks
+^^^^^^^^^^^^^^^^^^^^^^
+
 .. code:: pycon
 
-   # Retrieve all bookmarks
    >>> pb.posts.all()
 
    # Retrieve a single bookmark
