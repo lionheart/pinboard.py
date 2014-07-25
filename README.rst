@@ -43,8 +43,8 @@ Add a bookmark:
 
 .. code:: pycon
 
-   >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine",
-           extended="This is a description!", tags=["search", "tools"], shared=True,
+   >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", \
+           extended="This is a description!", tags=["search", "tools"], shared=True, \
            toread=False)
    {u'result_code': u'done'}
 
