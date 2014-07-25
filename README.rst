@@ -26,26 +26,42 @@ To get started, you're going to need to get your Pinboard API token from the `pa
 
 Once you've done this, you can now use the `pb` object to make calls to the Pinboard API. Here are some examples:
 
+Update
+''''''
+
+   Returns the most recent time a bookmark was added, updated or deleted.
+
+.. code:: pycon
+   >>> pb.posts.update()
+   {u'update_time': datetime.datetime(2014, 7, 25, 15, 4, 33)}
+
+Posts
+'''''
+
+Add a bookmark:
+
 .. code:: pycon
 
-   # Retrieve all bookmarks
-   >>> pb.posts.all()
-
-   # Retrieve a single bookmark
-   >>> bookmark = pb.posts.all(results=1)[0]
-   <Bookmark title="Of Princesses and Dragons — Medium" url="medium.com">
-
-   >>> bookmark.time
-   datetime.datetime(2014, 7, 21, 11, 11, 59)
-
-   # Make a change to a bookmark and save it
-   >>> bookmark.title = "Of Princesses and Dragons"
-   >>> bookmark.tags = ["blogs", "interesting"]
-   >>> bookmark.save()
+   >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine",
+           extended="This is a description!", tags=["search", "tools"], shared=True,
+           toread=False)
    {u'result_code': u'done'}
 
-   # You can also save a bookmark without a bookmark object
-   >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", tags=["search", "tools"])
+Update a bookmark:
+
+.. code:: pycon
+
+   # First, retrieve the bookmark you'd like to edit
+   >>> bookmark = pb.posts.get(url='http://google.com/')['posts'][0]
+   >>> bookmark
+   <Bookmark title="A Great Search Engine" url="google.com">
+
+   # You can now change title, description, shared, toread, tags, or time directly with the bookmark object.
+   >>> bookmark.title = "Google is pretty awesome"
+   >>> bookmark.tags = ["search", "searching"]
+
+   # Finally, save your changes!
+   >>> bookmark.save()
    {u'result_code': u'done'}
 
    # If you want to update the bookmark creation date as well, you'll need to pass in `update_time=True` to the save method
@@ -53,10 +69,140 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
    >>> bookmark.time = datetime.datetime.now() - datetime.timedelta(days=5)
    >>> bookmark.save(update_time=True)
 
-   # Retrieve all tags
-   >>> pb.tags.get()
+Delete a bookmark:
 
-   # By default, the Pinboard object will return parsed JSON objects. If you'd like the raw response object, just pass in `parse_response=False`
+.. code:: pycon
+
+   >>> pb.posts.delete(url="http://google.com/")
+   {u'result_code': u'done'}
+
+Get one or more posts on a single day matching the parameters:
+
+.. code:: pycon
+
+   >>> pb.posts.get(url="http://google.com/")
+   {u'date': datetime.datetime(2014, 7, 25, 16, 35, 25),
+    u'posts': [<Bookmark title="A Great Search Engine" url="google.com">],
+    u'user': u'dlo'}
+
+   >>> import datetime
+   >>> pb.posts.get(dt=datetime.date.today())
+   {u'date': datetime.datetime(2014, 7, 25, 16, 35, 25),
+    u'posts': [<Bookmark title="A Great Search Engine" url="google.com">,
+     <Bookmark title="Smooth Scrolling | CSS-Tricks" url="css-tricks.com">,
+     <Bookmark title="Apple "Frustrated" that "People Don't Want to Pay Anything" on Mobile, Says 'The Banner Saga' Developer | Touch Arcade" url="toucharcade.com">],
+    u'user': u'dlo'}
+
+Return all recent bookmarks (optionally filtering by tag):
+
+.. code:: pycon
+
+   >>> pb.posts.recent(tag=["programming", "python"])
+   {u'date': datetime.datetime(2014, 4, 28, 2, 7, 58),
+    u'posts': [<Bookmark title="itunesfs 1.0.0.7 : Python Package Index" url="pypi.python.org">,
+     <Bookmark title="mincss "Clears the junk out of your CSS" - Peterbe.com" url="www.peterbe.com">,
+     <Bookmark title="Braintree Test Credit Card Account Numbers" url="www.braintreepayments.com">,
+     <Bookmark title="Valued Lessons: Monads in Python (with nice syntax!)" url="www.valuedlessons.com">,
+     <Bookmark title="Paste #EGY1XPQxQ2UPuT91SH83 at spacepaste" url="bpaste.net">,
+     <Bookmark title="40 Random Letters and Numbers" url="gist.github.com">,
+     <Bookmark title="PEP 3156 -- Asynchronous IO Support Rebooted" url="www.python.org">,
+     <Bookmark title="Brython" url="www.brython.info">,
+     <Bookmark title="Django REST framework" url="django-rest-framework.org">,
+     <Bookmark title="mypy - A New Python Variant with Dynamic and Static Typing" url="www.mypy-lang.org">,
+     <Bookmark title="Julython 2012" url="www.julython.org">,
+     <Bookmark title="Stripe Blog: Exploring Python Using GDB" url="stripe.com">,
+     <Bookmark title="Python FAQ: Descriptors - fuzzy notepad" url="me.veekun.com">,
+     <Bookmark title="A Guide to Python's Magic Methods « rafekettler.com" url="www.rafekettler.com">,
+     <Bookmark title="Melopy" url="prezjordan.github.com">,
+     <Bookmark title="litl/rauth" url="github.com">],
+    u'user': u'dlo'}
+
+Return a list of dates with the number of posts at each date:
+
+.. code:: pycon
+
+   >>> pb.posts.dates(tag=["programming", "python"])
+   {u'dates': {datetime.date(2008, 12, 5): 1,
+     datetime.date(2008, 12, 6): 1,
+     ...
+     datetime.date(2014, 7, 24): 6,
+     datetime.date(2014, 7, 25): 4},
+    u'tag': u'programming+python',
+    u'user': u'dlo'}
+
+Get all bookmarks in your account:
+
+.. code:: pycon
+
+   >>> pb.posts.all()
+   [<Bookmark title="Of Princesses and Dragons" url="medium.com">
+    <Bookmark title="A Great Search Engine" url="google.com">,
+    ...
+    <Bookmark title="Runner Econ 101 - StimHa" url="stimhack.com">,
+    <Bookmark title="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
+
+You can also filter by tag, start, results, fromdt, or todt.
+
+.. code:: pycon
+
+   >>> import datetime
+   >>> five_days_ago = datetime.datetime.now() - datetime.timedelta(days=5)
+   >>> pb.posts.all(tag=["programming"], start=10, results=100, fromdt=five_days_ago)
+   [<Bookmark title="Of Princesses and Dragons" url="medium.com">
+    <Bookmark title="A Great Search Engine" url="google.com">,
+    ...
+    <Bookmark title="Runner Econ 101 - StimHa" url="stimhack.com">,
+    <Bookmark title="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
+
+Tags
+''''
+
+Suggest tags for a given URL:
+
+.. code:: pycon
+
+   >>> pb.posts.suggest(url="https://pinboard.in")
+   [{u'popular': [u'pinboard']},
+    {u'recommended': [u'bookmark',
+      u'bookmarks',
+      u'\uc815\ubcf4\ud1b5\uc2e0',
+      u'pinboard',
+      u'Unread',
+      u'webservice']}]
+
+Return all tags in your account along with the number of times they were used:
+
+.. code:: pycon
+
+   >>> pb.tags.get()
+   [<Tag name="absurd" count=1>,
+    <Tag name="accessibility" count=2>,
+    <Tag name="accounting" count=3>,
+    <Tag name="zen" count=1>,
+    <Tag name="zsh" count=1>,
+    <Tag name="zynga" count=1>]
+
+Delete a tag:
+
+.. code:: pycon
+
+   >>> pb.tags.delete(tag="zynga")
+   {u'result': u'done'}
+
+Rename a tag:
+
+.. code:: pycon
+
+   >>> pb.tags.rename(old='ppython', new='python')
+   {u'result': u'done'}
+
+Miscellaneous
+'''''''''''''
+
+By default, the Pinboard object will return parsed JSON objects. If you'd like the raw response object, just pass in `parse_response=False`.
+
+.. code:: pycon
+
    >>> response = pb.tags.get(parse_response=False)
    >>> response
    <addinfourl at 4396047680 whose fp = <socket._fileobject object at 0x105f79850>>
