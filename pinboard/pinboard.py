@@ -120,10 +120,8 @@ class PinboardCall(object):
         params['auth_token'] = self.token
 
         query_string = urllib.urlencode(params)
-
-        url = "{}?{}".format(url, query_string)
-
-        request = urllib2.Request(url)
+        final_url = "{}?{}".format(url, query_string)
+        request = urllib2.Request(final_url)
 
         opener = urllib2.build_opener(urllib2.HTTPSHandler)
         response = opener.open(request)
