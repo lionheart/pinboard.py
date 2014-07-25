@@ -24,10 +24,6 @@ class Bookmark(object):
     def pinboard(self):
         return Pinboard(self.token)
 
-    @property
-    def dt(self):
-        return Pinboard.string_from_datetime(self.time)
-
     def __repr__(self):
         parse_result = urllib2.urlparse.urlparse(self.url)
         return "<Bookmark title=\"{}\" url=\"{}\">".format(self.title.encode("utf-8"), parse_result.netloc)
@@ -43,7 +39,7 @@ class Bookmark(object):
         }
 
         if update_time:
-            params['dt'] = self.dt
+            params['dt'] = self.time
 
         return self.pinboard.posts.add(**params)
 
@@ -61,6 +57,7 @@ class Tag(object):
 
 
 class Pinboard(object):
+    DATE_FIELDS = ["dt", "date", "update_time"]
     BOOLEAN_FIELDS = ["meta", "replace", "shared", "toread"]
     SPACE_DELIMITED_FIELDS = ["tag", "tags"]
 
@@ -98,13 +95,26 @@ class PinboardCall(object):
         if 'parse_response' in params:
             del params['parse_response']
 
+        for field in Pinboard.DATE_FIELDS:
+            if field in kwargs:
+                try:
+                    params[field] = Pinboard.string_from_datetime(kwargs[field])
+                except:
+                    params[field] = kwargs[field]
+
         for field in Pinboard.BOOLEAN_FIELDS:
             if field in kwargs:
-                params[field] = kwargs[field] == "yes"
+                if isinstance(kwargs[field], bool):
+                    params[field] = "yes" if kwargs[field] else "no"
+                else:
+                    params[field] = kwargs[field]
 
         for field in Pinboard.SPACE_DELIMITED_FIELDS:
             if field in kwargs:
-                params[field] = ' '.join(kwargs[field])
+                if isinstance(kwargs[field], list):
+                    params[field] = ' '.join(kwargs[field])
+                else:
+                    params[field] = kwargs[field]
 
         params['format'] = "json"
         params['auth_token'] = self.token
@@ -121,13 +131,17 @@ class PinboardCall(object):
         if parse_response:
             json_response = json.load(response)
 
-            if 'date' in json_response:
-                json_response['date'] = Pinboard.datetime_from_string(json_response['date'])
+            for field in Pinboard.DATE_FIELDS:
+                if field in json_response:
+                    json_response[field] = Pinboard.datetime_from_string(json_response[field])
 
             if self.components == ["posts", "all"]:
                 return map(lambda k: Bookmark(k, self.token), json_response)
             elif self.components in [["posts", "get"], ["posts", "recent"]]:
                 json_response['posts'] = map(lambda k: Bookmark(k, self.token), json_response['posts'])
+            elif self.components == ["posts", "dates"]:
+                json_response['dates'] = {datetime.datetime.strptime(k, "%Y-%m-%d").date(): int(v) \
+                        for k, v in json_response['dates'].iteritems()}
             elif self.components == ["tags", "get"]:
                 tags = [Tag(k, v) for k, v in json_response.iteritems()]
                 tags.sort(key=operator.attrgetter('name'))
