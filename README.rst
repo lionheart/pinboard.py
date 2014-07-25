@@ -60,8 +60,6 @@ Update a bookmark:
    # You can now change description, extended, shared, toread, tags, or time directly with the bookmark object.
    >>> bookmark.description = "Google is pretty awesome"
    >>> bookmark.tags = ["search", "searching"]
-
-   # Finally, save your changes!
    >>> bookmark.save()
    {u'result_code': u'done'}
 
