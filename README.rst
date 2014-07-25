@@ -8,7 +8,7 @@ Installation
 
 Pinboard.py is available for download through the Python Package Index (PyPi). You can install it right away using pip or easy_install.
 
-.. code:: bash
+.. code-block:: bash
 
    pip install pinboard
 
@@ -19,7 +19,7 @@ Usage
 
 To get started, you're going to need to get your Pinboard API token from the `password page <https://pinboard.in/settings/password>`_ on the Pinboard website. Once you've got that, you're ready to go.
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> import pinboard
    >>> pb = pinboard.Pinboard(api_token)
@@ -31,7 +31,7 @@ Update
 
 Returns the most recent time a bookmark was added, updated or deleted.
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.update()
    {u'update_time': datetime.datetime(2014, 7, 25, 15, 4, 33)}
@@ -41,7 +41,7 @@ Posts
 
 Add a bookmark:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", \
            extended="This is a description!", tags=["search", "tools"], shared=True, \
@@ -50,7 +50,7 @@ Add a bookmark:
 
 Update a bookmark:
 
-.. code:: pycon
+.. code-block:: pycon
 
    # First, retrieve the bookmark you'd like to edit
    >>> bookmark = pb.posts.get(url='http://google.com/')['posts'][0]
@@ -70,14 +70,14 @@ Update a bookmark:
 
 Delete a bookmark:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.delete(url="http://google.com/")
    {u'result_code': u'done'}
 
 Get one or more posts on a single day matching the parameters:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.get(url="http://google.com/")
    {u'date': datetime.datetime(2014, 7, 25, 16, 35, 25),
@@ -94,7 +94,7 @@ Get one or more posts on a single day matching the parameters:
 
 Return all recent bookmarks (optionally filtering by tag):
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.recent(tag=["programming", "python"])
    {u'date': datetime.datetime(2014, 4, 28, 2, 7, 58),
@@ -118,7 +118,7 @@ Return all recent bookmarks (optionally filtering by tag):
 
 Return a list of dates with the number of posts at each date:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.dates(tag=["programming", "python"])
    {u'dates': {datetime.date(2008, 12, 5): 1,
@@ -131,7 +131,7 @@ Return a list of dates with the number of posts at each date:
 
 Get all bookmarks in your account:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.all()
    [<Bookmark description="Of Princesses and Dragons" url="medium.com">
@@ -142,7 +142,7 @@ Get all bookmarks in your account:
 
 You can also filter by tag, start, results, fromdt, or todt.
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> import datetime
    >>> five_days_ago = datetime.datetime.now() - datetime.timedelta(days=5)
@@ -158,7 +158,7 @@ Tags
 
 Suggest tags for a given URL:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.posts.suggest(url="https://pinboard.in")
    [{u'popular': [u'pinboard']},
@@ -171,7 +171,7 @@ Suggest tags for a given URL:
 
 Return all tags in your account along with the number of times they were used:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.tags.get()
    [<Tag name="absurd" count=1>,
@@ -183,14 +183,14 @@ Return all tags in your account along with the number of times they were used:
 
 Delete a tag:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.tags.delete(tag="zynga")
    {u'result': u'done'}
 
 Rename a tag:
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> pb.tags.rename(old='ppython', new='python')
    {u'result': u'done'}
@@ -200,7 +200,7 @@ Miscellaneous
 
 By default, pinboard.py will return parsed JSON objects. If you'd like the raw response object for a request, just pass in `parse_response=False`.
 
-.. code:: pycon
+.. code-block:: pycon
 
    >>> response = pb.tags.get(parse_response=False)
    >>> response
