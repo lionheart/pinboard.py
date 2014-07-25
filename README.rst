@@ -212,7 +212,7 @@ By default, pinboard.py will return parsed JSON objects. If you'd like the raw r
 
 Pinboard.py maps 1-1 to the Pinboard API (e.g., pb.one.two.three() will send a request to "https://api.pinboard.in/v1/one/two/three"). For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
 
-One more note--you might have noticed that there is no "title" attribute for bookmarks. This has been done since the Pinboard API calls titles "descriptions" and descriptions "extended" (and this was done to stay consistent with the Delicious API). In order to keep things minimally confusing, this library sticks to how Pinboard names these fields. Just remember--"description" means "title" and "extended" means "description".
+One more note--you might have noticed that there is no "title" attribute for bookmarks. This has been done since the Pinboard API calls titles "descriptions" and descriptions "extended" (and this was done to stay consistent with the Delicious API, way back in the day). In order to keep things minimally confusing, this library sticks to how Pinboard names these fields. Just remember--"description" means "title" and "extended" means "description".
 
 TODOs
 -----
