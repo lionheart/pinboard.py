@@ -29,7 +29,7 @@ Once you've done this, you can now use the `pb` object to make calls to the Pinb
 Update
 ''''''
 
-   Returns the most recent time a bookmark was added, updated or deleted.
+Returns the most recent time a bookmark was added, updated or deleted.
 
 .. code:: pycon
    >>> pb.posts.update()
