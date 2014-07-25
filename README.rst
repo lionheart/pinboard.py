@@ -54,10 +54,10 @@ Update a bookmark:
    # First, retrieve the bookmark you'd like to edit
    >>> bookmark = pb.posts.get(url='http://google.com/')['posts'][0]
    >>> bookmark
-   <Bookmark title="A Great Search Engine" url="google.com">
+   <Bookmark description="A Great Search Engine" url="google.com">
 
-   # You can now change title, description, shared, toread, tags, or time directly with the bookmark object.
-   >>> bookmark.title = "Google is pretty awesome"
+   # You can now change description, extended, shared, toread, tags, or time directly with the bookmark object.
+   >>> bookmark.description = "Google is pretty awesome"
    >>> bookmark.tags = ["search", "searching"]
 
    # Finally, save your changes!
@@ -82,15 +82,15 @@ Get one or more posts on a single day matching the parameters:
 
    >>> pb.posts.get(url="http://google.com/")
    {u'date': datetime.datetime(2014, 7, 25, 16, 35, 25),
-    u'posts': [<Bookmark title="A Great Search Engine" url="google.com">],
+    u'posts': [<Bookmark description="A Great Search Engine" url="google.com">],
     u'user': u'dlo'}
 
    >>> import datetime
    >>> pb.posts.get(dt=datetime.date.today())
    {u'date': datetime.datetime(2014, 7, 25, 16, 35, 25),
-    u'posts': [<Bookmark title="A Great Search Engine" url="google.com">,
-     <Bookmark title="Smooth Scrolling | CSS-Tricks" url="css-tricks.com">,
-     <Bookmark title="Apple "Frustrated" that "People Don't Want to Pay Anything" on Mobile, Says 'The Banner Saga' Developer | Touch Arcade" url="toucharcade.com">],
+    u'posts': [<Bookmark description="A Great Search Engine" url="google.com">,
+     <Bookmark description="Smooth Scrolling | CSS-Tricks" url="css-tricks.com">,
+     <Bookmark description="Apple "Frustrated" that "People Don't Want to Pay Anything" on Mobile, Says 'The Banner Saga' Developer | Touch Arcade" url="toucharcade.com">],
     u'user': u'dlo'}
 
 Return all recent bookmarks (optionally filtering by tag):
@@ -99,22 +99,22 @@ Return all recent bookmarks (optionally filtering by tag):
 
    >>> pb.posts.recent(tag=["programming", "python"])
    {u'date': datetime.datetime(2014, 4, 28, 2, 7, 58),
-    u'posts': [<Bookmark title="itunesfs 1.0.0.7 : Python Package Index" url="pypi.python.org">,
-     <Bookmark title="mincss "Clears the junk out of your CSS" - Peterbe.com" url="www.peterbe.com">,
-     <Bookmark title="Braintree Test Credit Card Account Numbers" url="www.braintreepayments.com">,
-     <Bookmark title="Valued Lessons: Monads in Python (with nice syntax!)" url="www.valuedlessons.com">,
-     <Bookmark title="Paste #EGY1XPQxQ2UPuT91SH83 at spacepaste" url="bpaste.net">,
-     <Bookmark title="40 Random Letters and Numbers" url="gist.github.com">,
-     <Bookmark title="PEP 3156 -- Asynchronous IO Support Rebooted" url="www.python.org">,
-     <Bookmark title="Brython" url="www.brython.info">,
-     <Bookmark title="Django REST framework" url="django-rest-framework.org">,
-     <Bookmark title="mypy - A New Python Variant with Dynamic and Static Typing" url="www.mypy-lang.org">,
-     <Bookmark title="Julython 2012" url="www.julython.org">,
-     <Bookmark title="Stripe Blog: Exploring Python Using GDB" url="stripe.com">,
-     <Bookmark title="Python FAQ: Descriptors - fuzzy notepad" url="me.veekun.com">,
-     <Bookmark title="A Guide to Python's Magic Methods « rafekettler.com" url="www.rafekettler.com">,
-     <Bookmark title="Melopy" url="prezjordan.github.com">,
-     <Bookmark title="litl/rauth" url="github.com">],
+    u'posts': [<Bookmark description="itunesfs 1.0.0.7 : Python Package Index" url="pypi.python.org">,
+     <Bookmark description="mincss "Clears the junk out of your CSS" - Peterbe.com" url="www.peterbe.com">,
+     <Bookmark description="Braintree Test Credit Card Account Numbers" url="www.braintreepayments.com">,
+     <Bookmark description="Valued Lessons: Monads in Python (with nice syntax!)" url="www.valuedlessons.com">,
+     <Bookmark description="Paste #EGY1XPQxQ2UPuT91SH83 at spacepaste" url="bpaste.net">,
+     <Bookmark description="40 Random Letters and Numbers" url="gist.github.com">,
+     <Bookmark description="PEP 3156 -- Asynchronous IO Support Rebooted" url="www.python.org">,
+     <Bookmark description="Brython" url="www.brython.info">,
+     <Bookmark description="Django REST framework" url="django-rest-framework.org">,
+     <Bookmark description="mypy - A New Python Variant with Dynamic and Static Typing" url="www.mypy-lang.org">,
+     <Bookmark description="Julython 2012" url="www.julython.org">,
+     <Bookmark description="Stripe Blog: Exploring Python Using GDB" url="stripe.com">,
+     <Bookmark description="Python FAQ: Descriptors - fuzzy notepad" url="me.veekun.com">,
+     <Bookmark description="A Guide to Python's Magic Methods « rafekettler.com" url="www.rafekettler.com">,
+     <Bookmark description="Melopy" url="prezjordan.github.com">,
+     <Bookmark description="litl/rauth" url="github.com">],
     u'user': u'dlo'}
 
 Return a list of dates with the number of posts at each date:
@@ -135,11 +135,11 @@ Get all bookmarks in your account:
 .. code:: pycon
 
    >>> pb.posts.all()
-   [<Bookmark title="Of Princesses and Dragons" url="medium.com">
-    <Bookmark title="A Great Search Engine" url="google.com">,
+   [<Bookmark description="Of Princesses and Dragons" url="medium.com">
+    <Bookmark description="A Great Search Engine" url="google.com">,
     ...
-    <Bookmark title="Runner Econ 101 - StimHa" url="stimhack.com">,
-    <Bookmark title="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
+    <Bookmark description="Runner Econ 101 - StimHa" url="stimhack.com">,
+    <Bookmark description="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
 
 You can also filter by tag, start, results, fromdt, or todt.
 
@@ -148,11 +148,11 @@ You can also filter by tag, start, results, fromdt, or todt.
    >>> import datetime
    >>> five_days_ago = datetime.datetime.now() - datetime.timedelta(days=5)
    >>> pb.posts.all(tag=["programming"], start=10, results=100, fromdt=five_days_ago)
-   [<Bookmark title="Of Princesses and Dragons" url="medium.com">
-    <Bookmark title="A Great Search Engine" url="google.com">,
+   [<Bookmark description="Of Princesses and Dragons" url="medium.com">
+    <Bookmark description="A Great Search Engine" url="google.com">,
     ...
-    <Bookmark title="Runner Econ 101 - StimHa" url="stimhack.com">,
-    <Bookmark title="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
+    <Bookmark description="Runner Econ 101 - StimHa" url="stimhack.com">,
+    <Bookmark description="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
 
 Tags
 ''''
@@ -210,6 +210,8 @@ By default, the Pinboard object will return parsed JSON objects. If you'd like t
    ... your tags ...
 
 Pinboard.py maps 1-1 to the Pinboard API (e.g., pb.one.two.three() will send a request to "https://api.pinboard.in/v1/one/two/three"). For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
+
+One more note--you might have noticed that there is no "title" attribute for bookmarks. This has been done this way since the Pinboard API calls titles "descriptions" and description "extended" (this was done to stay consistent with the Delicious API). In order to keep things minimally confusing, this library sticks to how Pinboard names these fields from the API perspective. Just remember--"description" means "title" and "extended" means "description".
 
 TODOs
 -----

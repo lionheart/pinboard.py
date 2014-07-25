@@ -9,8 +9,8 @@ PINBOARD_DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 class Bookmark(object):
     def __init__(self, payload, token):
-        self.title = payload['description']
-        self.description = payload['extended']
+        self.description = payload['description']
+        self.extended = payload['extended']
         self.url = payload['href']
         self.meta = payload['meta']
         self.hash = payload['hash']
@@ -26,13 +26,13 @@ class Bookmark(object):
 
     def __repr__(self):
         parse_result = urllib2.urlparse.urlparse(self.url)
-        return "<Bookmark title=\"{}\" url=\"{}\">".format(self.title.encode("utf-8"), parse_result.netloc)
+        return "<Bookmark description=\"{}\" url=\"{}\">".format(self.description.encode("utf-8"), parse_result.netloc)
 
     def save(self, update_time=False):
         params = {
             'url': self.url,
-            'description': self.title,
-            'extended': self.description,
+            'description': self.description,
+            'extended': self.extended,
             'tags': self.tags,
             'shared': "yes" if self.shared else "no",
             'toread': "yes" if self.toread else "no",
