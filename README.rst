@@ -1,7 +1,7 @@
 Pinboard.py
 ===========
 
-Pinboard.py is an easy-to-use and fully-functional Python wrapper for the Pinboard.in API.
+Pinboard.py is an easy-to-use and fully-functional Python wrapper and command-line utility for the Pinboard.in API.
 
 Installation
 ------------
