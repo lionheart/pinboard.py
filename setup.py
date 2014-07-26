@@ -54,6 +54,6 @@ setup(
     author_email=metadata.__email__,
     packages=['pinboard'],
     package_data={'': ['LICENSE', 'README.rst']},
-    cmdclass={'test': TestCommand}
-    # scripts=['scripts/pinboard']
+    cmdclass={'test': TestCommand},
+    scripts=["bin/pinboard"]
 )

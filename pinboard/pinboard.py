@@ -4,8 +4,12 @@ import operator
 import urllib
 import urllib2
 
+import exceptions
+
 PINBOARD_API_ENDPOINT = "https://api.pinboard.in/v1/"
-PINBOARD_DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+PINBOARD_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+PINBOARD_ALTERNATE_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+PINBOARD_DATE_FORMAT = "%Y-%m-%d"
 
 class Bookmark(object):
     def __init__(self, payload, token):
@@ -57,7 +61,7 @@ class Tag(object):
 
 
 class Pinboard(object):
-    DATE_FIELDS = ["dt", "date", "update_time"]
+    DATE_FIELDS = ["dt", "date", "update_time", "created_at", "updated_at"]
     BOOLEAN_FIELDS = ["meta", "replace", "shared", "toread"]
     SPACE_DELIMITED_FIELDS = ["tag", "tags"]
 
@@ -68,12 +72,23 @@ class Pinboard(object):
         return PinboardCall(self.token, k)
 
     @staticmethod
+    def date_from_string(value):
+        return datetime.datetime.strptime(value, PINBOARD_DATE_FORMAT).date()
+
+    @staticmethod
+    def string_from_date(d):
+        return d.strftime(PINBOARD_DATE_FORMAT)
+
+    @staticmethod
     def datetime_from_string(value):
-        return datetime.datetime.strptime(value, PINBOARD_DATE_FORMAT)
+        try:
+            return datetime.datetime.strptime(value, PINBOARD_DATETIME_FORMAT)
+        except ValueError:
+            return datetime.datetime.strptime(value, PINBOARD_ALTERNATE_DATETIME_FORMAT)
 
     @staticmethod
     def string_from_datetime(dt):
-        return dt.strftime(PINBOARD_DATE_FORMAT)
+        return dt.strftime(PINBOARD_DATETIME_FORMAT)
 
 
 class PinboardCall(object):
@@ -82,6 +97,10 @@ class PinboardCall(object):
         self.components = [path]
 
     def __getattr__(self, k):
+        self.components.append(k)
+        return self
+
+    def __getitem__(self, k):
         self.components.append(k)
         return self
 
@@ -121,31 +140,45 @@ class PinboardCall(object):
 
         query_string = urllib.urlencode(params)
         final_url = "{}?{}".format(url, query_string)
-        request = urllib2.Request(final_url)
 
-        opener = urllib2.build_opener(urllib2.HTTPSHandler)
-        response = opener.open(request)
-
-        if parse_response:
-            json_response = json.load(response)
-
-            for field in Pinboard.DATE_FIELDS:
-                if field in json_response:
-                    json_response[field] = Pinboard.datetime_from_string(json_response[field])
-
-            if self.components == ["posts", "all"]:
-                return map(lambda k: Bookmark(k, self.token), json_response)
-            elif self.components in [["posts", "get"], ["posts", "recent"]]:
-                json_response['posts'] = map(lambda k: Bookmark(k, self.token), json_response['posts'])
-            elif self.components == ["posts", "dates"]:
-                json_response['dates'] = {datetime.datetime.strptime(k, "%Y-%m-%d").date(): int(v) \
-                        for k, v in json_response['dates'].iteritems()}
-            elif self.components == ["tags", "get"]:
-                tags = [Tag(k, v) for k, v in json_response.iteritems()]
-                tags.sort(key=operator.attrgetter('name'))
-                return tags
-
-            return json_response
+        try:
+            request = urllib2.Request(final_url)
+            opener = urllib2.build_opener(urllib2.HTTPSHandler)
+            response = opener.open(request)
+        except urllib2.HTTPError as e:
+            error_mappings = {
+                401: exceptions.PinboardAuthenticationError,
+                403: exceptions.PinboardForbiddenError,
+                500: exceptions.PinboardServerError,
+            }
+            Error = error_mappings[e.code]
+            raise Error(e.url, e.code, e.msg, e.hdrs, e.fp)
         else:
-            return response
+            if parse_response:
+                json_response = json.load(response)
+
+                for field in Pinboard.DATE_FIELDS:
+                    if field in json_response:
+                        json_response[field] = Pinboard.datetime_from_string(json_response[field])
+
+                if self.components == ["posts", "all"]:
+                    return map(lambda k: Bookmark(k, self.token), json_response)
+                elif self.components in [["posts", "get"], ["posts", "recent"]]:
+                    json_response['posts'] = map(lambda k: Bookmark(k, self.token), json_response['posts'])
+                elif self.components == ["posts", "dates"]:
+                    json_response['dates'] = {Pinboard.date_from_string(k): int(v) \
+                            for k, v in json_response['dates'].iteritems()}
+                elif self.components == ["tags", "get"]:
+                    tags = [Tag(k, v) for k, v in json_response.iteritems()]
+                    tags.sort(key=operator.attrgetter('name'))
+                    return tags
+                elif self.components == ["notes", "list"]:
+                    for note in json_response['notes']:
+                        for field in Pinboard.DATE_FIELDS:
+                            if field in note:
+                                note[field] = Pinboard.datetime_from_string(note[field])
+
+                return json_response
+            else:
+                return response
 

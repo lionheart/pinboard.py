@@ -1,0 +1,342 @@
+#!/usr/bin/env python
+# vim: set filetype=python
+
+from subprocess import call
+import ConfigParser
+import argparse
+import os
+import sys
+import tempfile
+import pprint
+
+import pinboard
+
+try:
+    from dateutil.parser import parse as parse_date
+except:
+    def parse_date(date_string):
+        print "For better date/time support, install dateutil."
+
+        try:
+            return Pinboard.date_from_string(date_string)
+        except ValueError:
+            pass
+
+        try:
+            return Pinboard.datetime_from_string(date_string)
+        except ValueError:
+            pass
+
+
+class PinboardCommandLineHandler(object):
+    def __init__(self, namespace):
+        self.namespace = namespace
+
+    @property
+    def config_file(self):
+        return os.path.expanduser("~/.pinboardrc")
+
+    @property
+    def pinboard(self):
+        try:
+            config = ConfigParser.RawConfigParser()
+            with open(self.config_file, "r") as f:
+                config.readfp(f)
+        except:
+            api_token = self._init_action()
+        else:
+            api_token = config.get("authentication", "api_token")
+
+        return pinboard.Pinboard(api_token)
+
+    def _login_action(self):
+        api_token = ""
+        while ":" not in api_token:
+            api_token = raw_input("Enter your Pinboard API token: ")
+
+        config = ConfigParser.RawConfigParser()
+        config.add_section("authentication")
+        config.set("authentication", "api_token", api_token)
+
+        with open(self.config_file, "wb") as f:
+            config.write(f)
+
+        print "Saved Pinboard credentials to ~/.pinboardrc"
+        return api_token
+
+    def _call_api_and_catch_exceptions(self, fun, handler=None, *args, **kwargs):
+        try:
+            response = fun(parse_response=not self.namespace.raw, *args, **kwargs)
+        except pinboard.PinboardServerError:
+            print "HTTP Error 500: Internal Server Error. Either you have " \
+                    "provided invalid credentials or the Pinboard API " \
+                    "encountered an internal exception while fulfilling " \
+                    "the request."
+        else:
+            if self.namespace.raw:
+                print response.read()
+            else:
+                if handler is None:
+                    pprint.pprint(response)
+                else:
+                    handler(response)
+
+    def _bookmarks_action(self):
+        kwargs = {}
+        if len(self.namespace.tags) > 0:
+            kwargs['tag'] = self.namespace.tags
+
+        if self.namespace.count is not None:
+            kwargs['results'] = self.namespace.count
+
+        if self.namespace.offset is not None:
+            kwargs['start'] = self.namespace.offset
+
+        if self.namespace.include_meta is not None:
+            kwargs['meta'] = self.namespace.include_meta
+
+        if self.namespace.from_date is not None:
+            kwargs['fromdt'] = self.namespace.fromdt
+
+        if self.namespace.to_date is not None:
+            kwargs['todt'] = self.namespace.todt
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.all, **kwargs)
+
+    def _recent_action(self):
+        kwargs = {}
+        if len(self.namespace.tags) > 0:
+            kwargs['tag'] = self.namespace.tags
+
+        if self.namespace.count is not None:
+            kwargs['results'] = self.namespace.count
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.recent, **kwargs)
+
+    def _get_action(self):
+        kwargs = {}
+        if len(self.namespace.tags) > 0:
+            kwargs['tag'] = self.namespace.tags
+
+        if self.namespace.url is not None:
+            kwargs['url'] = self.namespace.url
+
+        if self.namespace.include_meta is not None:
+            kwargs['meta'] = self.namespace.include_meta
+
+        if self.namespace.date is not None:
+            kwargs['dt'] = self.namespace.date
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.get, **kwargs)
+
+    def _add_action(self):
+        kwargs = {}
+        if len(self.namespace.tags) > 0:
+            kwargs['tags'] = self.namespace.tags
+
+        if self.namespace.url is not None:
+            kwargs['url'] = self.namespace.url
+
+        if self.namespace.title is not None:
+            kwargs['description'] = self.namespace.title
+
+        if self.namespace.description is not None:
+            kwargs['extended'] = self.namespace.description
+
+        if self.namespace.toread is not None:
+            kwargs['toread'] = self.namespace.toread
+
+        if self.namespace.shared is not None:
+            kwargs['shared'] = self.namespace.shared
+
+        if self.namespace.date is not None:
+            kwargs['dt'] = self.namespace.date
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.add, **kwargs)
+
+    def _delete_action(self):
+        kwargs = {}
+        if self.namespace.url is not None:
+            kwargs['url'] = self.namespace.url
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.delete, **kwargs)
+
+    def _suggest_tags_action(self):
+        kwargs = {}
+        if self.namespace.url is not None:
+            kwargs['url'] = self.namespace.url
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.suggest, **kwargs)
+
+    def _tags_action(self):
+        def handler(tags):
+            max_title_length = max(len(tag.name) for tag in tags)
+            row_format = "{:<" + str(max_title_length) + "}  {:<6}"
+
+            print row_format.format("Tag", "Count")
+            for tag in tags:
+                print row_format.format(tag.name, tag.count)
+
+        self._call_api_and_catch_exceptions(self.pinboard.tags.get, handler)
+
+    def _delete_tag_action(self):
+        kwargs = {}
+        if self.namespace.name is not None:
+            kwargs['name'] = self.namespace.name
+
+        self._call_api_and_catch_exceptions(self.pinboard.tags.delete, **kwargs)
+
+    def _rename_tag_action(self):
+        kwargs = {}
+        if self.namespace.old is not None:
+            kwargs['old'] = self.namespace.old
+
+        if self.namespace.new is not None:
+            kwargs['new'] = self.namespace.new
+
+        self._call_api_and_catch_exceptions(self.pinboard.tags.rename, **kwargs)
+
+    def _rss_key_action(self):
+        def handler(response):
+            print response['result']
+
+        self._call_api_and_catch_exceptions(self.pinboard.user.secret, handler)
+
+    def _api_token_action(self):
+        def handler(response):
+            print response['result']
+
+        self._call_api_and_catch_exceptions(self.pinboard.user.api_token, handler)
+
+    def _notes_action(self):
+        def handler(response):
+            notes = response['notes']
+            headers = ["ID", "Title", "Length", "Created", "Updated"]
+
+            max_title_length = max(len(note['title']) for note in notes)
+            max_length = max(len(str(note['length'])) for note in notes)
+            max_length = max(len("Length"), max_length)
+
+            row_format = "{:<20}  {:<" + str(max_title_length) + "}  {:<" + str(max_length) + "}  {:<24}  {:<24}"
+
+            print row_format.format(*headers)
+            for note in notes:
+                print row_format.format(
+                    note['id'],
+                    note['title'],
+                    note['length'],
+                    note['created_at'].strftime("%c"),
+                    note['updated_at'].strftime("%c")
+                )
+
+        self._call_api_and_catch_exceptions(self.pinboard.notes.list, handler)
+
+    def _note_action(self):
+        def handler(note):
+            print note['text']
+
+        id = self.namespace.id
+        self._call_api_and_catch_exceptions(self.pinboard.notes[id], handler)
+
+    def _last_update_action(self):
+        def handler(response):
+            dt = response['update_time']
+            print dt.strftime("%B %d %Y, %r %Z")
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.update, handler)
+
+    def run(self):
+        command_map = {
+            'last-update': self._last_update_action,
+            'bookmarks': self._bookmarks_action,
+            'get': self._get_action,
+            'recent': self._recent_action,
+            'login': self._login_action,
+            'add': self._add_action,
+            'delete': self._delete_action,
+            'suggest-tags': self._suggest_tags_action,
+            'tags': self._tags_action,
+            'delete-tag': self._delete_tag_action,
+            'rename-tag': self._rename_tag_action,
+            'rss-key': self._rss_key_action,
+            'api-token': self._api_token_action,
+            'notes': self._notes_action,
+            'note': self._note_action,
+        }
+
+        command_map[self.namespace.subparser]()
+
+class DateAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, parse_date(values))
+
+
+def BoolAction(true_choice):
+    class Action(argparse.Action):
+        def __call__(self, parser, namespace, values, option_string=None):
+            setattr(namespace, self.dest, option_string == true_choice)
+
+    return Action
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog='pinboard')
+    parser.add_argument("--raw", action='store_true', default=False)
+
+    subparsers = parser.add_subparsers(dest="subparser")
+    parser_bookmarks = subparsers.add_parser("bookmarks")
+    parser_bookmarks.add_argument("--from_date", action=DateAction, default=None)
+    parser_bookmarks.add_argument("--to_date", action=DateAction, default=None)
+    parser_bookmarks.add_argument("--tags", nargs='+', type=str, default=[])
+    parser_bookmarks.add_argument("--include_meta", type=bool, default=True)
+    parser_bookmarks.add_argument("--count", type=int, default=None)
+    parser_bookmarks.add_argument("--offset", type=int, default=None)
+
+    parser_recent = subparsers.add_parser("recent")
+    parser_recent.add_argument("--tags", nargs='+', type=str, default=[])
+    parser_recent.add_argument("--count", type=int, default=None)
+
+    parser_get = subparsers.add_parser("get")
+    parser_get.add_argument("--tags", nargs='+', type=str, default=[])
+    parser_get.add_argument("--date", action=DateAction, default=None)
+    parser_get.add_argument("--url", type=str, default=None)
+    parser_get.add_argument("--include_meta", type=bool, default=True)
+
+    parser_add = subparsers.add_parser("add")
+    parser_add.add_argument("--url", type=str, default=None, required=True)
+    parser_add.add_argument("--title", type=str, default=None, required=True)
+    parser_add.add_argument("--description", type=str, default=None)
+    parser_add.add_argument("--tags", nargs='+', type=str, default=[])
+    parser_add.add_argument("--date", action=DateAction, default=None)
+    parser_add.add_argument("--public", "--private", nargs=0,
+        action=BoolAction('--public'), dest='shared', default=True)
+    parser_add.add_argument("--read", "--unread", nargs=0, dest="toread",
+        default=True, action=BoolAction("--unread"))
+
+    parser_delete = subparsers.add_parser("delete")
+    parser_delete.add_argument("--url", type=str, default=None, required=True)
+
+    parser_suggest_tags = subparsers.add_parser("suggest-tags")
+    parser_suggest_tags.add_argument("--url", type=str, default=None, required=True)
+
+    parser_delete_tag = subparsers.add_parser("delete-tag")
+    parser_delete_tag.add_argument("--name", type=str, default=None, required=True)
+
+    parser_rename_tag = subparsers.add_parser("rename-tag")
+    parser_rename_tag.add_argument("--old", type=str, default=None, required=True)
+    parser_rename_tag.add_argument("--new", type=str, default=None, required=True)
+
+    parser_note = subparsers.add_parser("note")
+    parser_note.add_argument("--id", type=str, default=None, required=True)
+
+    subparsers.add_parser("last-update")
+    subparsers.add_parser("tags")
+    subparsers.add_parser("notes")
+    subparsers.add_parser("login")
+    subparsers.add_parser("rss-key")
+    subparsers.add_parser("api-token")
+
+    args = parser.parse_args()
+    handler = PinboardCommandLineHandler(args)
+    handler.run()
+
