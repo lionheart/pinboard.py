@@ -1,8 +1,11 @@
 #!/usr/bin/env/python
 # -*- coding: utf-8 -*-
 
+import unittest
 import os
 from pinboard import metadata
+from distutils.cmd import Command
+from test_pinboard import TestPinboardAPI
 
 try:
     from setuptools import setup
@@ -25,6 +28,19 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
 ]
 
+class TestCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        suite = unittest.TestLoader().loadTestsFromTestCase(TestPinboardAPI)
+        unittest.TextTestRunner(verbosity=2).run(suite)
+
 setup(
     name='pinboard',
     version=metadata.__version__,
@@ -38,5 +54,6 @@ setup(
     author_email=metadata.__email__,
     packages=['pinboard'],
     package_data={'': ['LICENSE', 'README.rst']},
+    cmdclass={'test': TestCommand}
     # scripts=['scripts/pinboard']
 )
