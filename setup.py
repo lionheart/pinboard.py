@@ -5,7 +5,6 @@ import unittest
 import os
 from pinboard import metadata
 from distutils.cmd import Command
-from test_pinboard import TestPinboardAPI
 
 try:
     from setuptools import setup
@@ -38,6 +37,7 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        from test_pinboard import TestPinboardAPI
         suite = unittest.TestLoader().loadTestsFromTestCase(TestPinboardAPI)
         unittest.TextTestRunner(verbosity=2).run(suite)
 
@@ -52,7 +52,7 @@ setup(
     license=metadata.__license__,
     author=metadata.__author__,
     author_email=metadata.__email__,
-    packages=['pinboard'],
+    packages=['pinboard', 'test_pinboard'],
     package_data={'': ['LICENSE', 'README.rst']},
     cmdclass={'test': TestCommand},
     scripts=["bin/pinboard"]
