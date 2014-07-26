@@ -212,6 +212,11 @@ Pinboard.py maps 1-1 to the Pinboard API (e.g., pb.one.two.three() will send a r
 
 One more note--you might have noticed that there is no "title" attribute for bookmarks. This has been done since the Pinboard API calls titles "descriptions" and descriptions "extended" (and this was done to stay consistent with the Delicious API, way back in the day). In order to keep things minimally confusing, this library sticks to how Pinboard names these fields. Just remember--"description" means "title" and "extended" means "description".
 
+Command-Line
+------------
+
+In addition to providing full Python-level support for the Pinboard API, pinboard.py also comes bundled with a handy command-line utility called "pinboard". Just type "pinboard -h" for a full list of supported commands.
+
 License
 -------
 
