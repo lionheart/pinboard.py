@@ -52,7 +52,7 @@ setup(
     license=metadata.__license__,
     author=metadata.__author__,
     author_email=metadata.__email__,
-    packages=['pinboard', 'test_pinboard'],
+    packages=['pinboard'],
     package_data={'': ['LICENSE', 'README.rst']},
     cmdclass={'test': TestCommand},
     scripts=["bin/pinboard"]
