@@ -215,7 +215,9 @@ One more note--you might have noticed that there is no "title" attribute for boo
 Command-Line
 ------------
 
-In addition to providing full Python-level support for the Pinboard API, pinboard.py also comes bundled with a handy command-line utility called "pinboard". Just type "pinboard -h" for a full list of supported commands.
+In addition to providing full Python-level support for the Pinboard API, pinboard.py also comes bundled with a handy command-line utility called "pinboard". Just type "pinboard -h" for a full list of supported commands. To get started, type "pinboard login" and have your API token ready.
+
+All of the commands pre-process the output into a Python object. If you would like to shoot the raw response data to stdout, just pass "--raw" before the subcommand (e.g., "pinboard --raw bookmarks"). You can then pipe that data into any program that parses JSON.
 
 License
 -------
