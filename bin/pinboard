@@ -118,6 +118,13 @@ class PinboardCommandLineHandler(object):
 
         self._call_api_and_catch_exceptions(self.pinboard.posts.recent, **kwargs)
 
+    def _dates_action(self):
+        kwargs = {}
+        if len(self.namespace.tags) > 0:
+            kwargs['tag'] = self.namespace.tags
+
+        self._call_api_and_catch_exceptions(self.pinboard.posts.dates, **kwargs)
+
     def _get_action(self):
         kwargs = {}
         if len(self.namespace.tags) > 0:
@@ -267,6 +274,7 @@ class PinboardCommandLineHandler(object):
             'api-token': self._api_token_action,
             'notes': self._notes_action,
             'note': self._note_action,
+            'dates': self._dates_action,
         }
 
         command_map[self.namespace.subparser]()
@@ -315,6 +323,9 @@ if __name__ == "__main__":
     parser_recent = subparsers.add_parser("recent", help="posts/recent")
     parser_recent.add_argument("--tags", nargs='+', type=str, default=[])
     parser_recent.add_argument("--count", type=int, default=None)
+
+    parser_dates = subparsers.add_parser("dates", help="posts/dates")
+    parser_dates.add_argument("--tags", nargs='+', type=str, default=[])
 
     parser_bookmarks = subparsers.add_parser("bookmarks", help="posts/all")
     parser_bookmarks.add_argument("--from_date", action=DateAction, default=None)
