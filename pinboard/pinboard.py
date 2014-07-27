@@ -25,6 +25,24 @@ class Bookmark(object):
         self.time = Pinboard.datetime_from_string(payload['time'])
         self.token = token
 
+    def __eq__(self, other):
+        return other.hash == self.hash
+
+    def __ne__(self, other):
+        return other.meta != self.meta
+
+    def __gt__(self, other):
+        return self.time > other.time
+
+    def __lt__(self, other):
+        return self.time < other.time
+
+    def __ge__(self, other):
+        return self.time >= other.time
+
+    def __le__(self, other):
+        return self.time <= other.time
+
     @property
     def pinboard(self):
         return Pinboard(self.token)
@@ -172,6 +190,8 @@ class PinboardCall(object):
                 elif self.components == ["posts", "dates"]:
                     json_response['dates'] = {Pinboard.date_from_string(k): int(v) \
                             for k, v in json_response['dates'].iteritems()}
+                elif self.components == ["posts", "update"]:
+                    return json_response['update_time']
                 elif self.components == ["tags", "get"]:
                     tags = [Tag(k, v) for k, v in json_response.iteritems()]
                     tags.sort(key=operator.attrgetter('name'))
