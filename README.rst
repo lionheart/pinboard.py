@@ -280,12 +280,25 @@ You can print a full list of pinboard commands by passing the "-h" flag.
    $ pinboard -h
    usage: pinboard [-h] [--raw]
 
-                   {login,last-update,bookmarks,recent,get,add,delete,tags,suggest-tags,delete-tag,rename-tag,notes,note,rss-key,api-token}
+                   {login,last-update,add,delete,get,recent,bookmarks,suggest-tags,tags,delete-tag,rename-tag,notes,note,rss-key,api-token}
                    ...
 
    positional arguments:
-     {login,last-update,bookmarks,recent,get,add,delete,tags,suggest-tags,delete-tag,rename-tag,notes,note,rss-key,api-token}
-
+     {login,last-update,add,delete,get,recent,bookmarks,suggest-tags,tags,delete-tag,rename-tag,notes,note,rss-key,api-token}
+       add                 posts/add
+       delete              posts/delete
+       get                 posts/get
+       recent              posts/recent
+       bookmarks           posts/all
+       suggest-tags        posts/suggest
+       tags                tags/get
+       delete-tag          tags/delete
+       rename-tag          tags/rename
+       notes               notes/list
+       note                notes/ID
+       rss-key             user/secret
+       api-token           user/api_token
+   
    optional arguments:
      -h, --help            show this help message and exit
      --raw                 Print the raw data from the Pinboard API without any
