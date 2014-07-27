@@ -280,11 +280,11 @@ You can print a full list of pinboard commands by passing the "-h" flag.
    $ pinboard -h
    usage: pinboard [-h] [--raw]
 
-                   {bookmarks,recent,get,add,delete,suggest-tags,delete-tag,rename-tag,note,last-update,tags,notes,login,rss-key,api-token}
+                   {login,last-update,bookmarks,recent,get,add,delete,tags,suggest-tags,delete-tag,rename-tag,notes,note,rss-key,api-token}
                    ...
 
    positional arguments:
-     {bookmarks,recent,get,add,delete,suggest-tags,delete-tag,rename-tag,note,last-update,tags,notes,login,rss-key,api-token}
+     {login,last-update,bookmarks,recent,get,add,delete,tags,suggest-tags,delete-tag,rename-tag,notes,note,rss-key,api-token}
 
    optional arguments:
      -h, --help            show this help message and exit
