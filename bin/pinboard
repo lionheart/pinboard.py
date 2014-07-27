@@ -16,17 +16,17 @@ try:
     from dateutil.parser import parse as parse_date
 except:
     def parse_date(date_string):
-        print "For better date/time support, install dateutil."
+        sys.stderr.write("For better date/time support, install python-dateutil.\n")
 
         try:
-            return Pinboard.date_from_string(date_string)
+            return pinboard.Pinboard.date_from_string(date_string)
         except ValueError:
             pass
 
         try:
-            return Pinboard.datetime_from_string(date_string)
+            return pinboard.Pinboard.datetime_from_string(date_string)
         except ValueError:
-            pass
+            sys.stderr.write("Could not parse date from '{}'.\n".format(date_string))
 
 
 class PinboardCommandLineHandler(object):

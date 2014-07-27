@@ -217,7 +217,61 @@ Command-Line
 
 In addition to providing full Python-level support for the Pinboard API, pinboard.py also comes bundled with a handy command-line utility called "pinboard". Just type "pinboard -h" for a full list of supported commands. To get started, type "pinboard login" and have your API token ready.
 
-All of the commands pre-process the output into a Python object. If you would like to shoot the raw response data to stdout, just pass "--raw" before the subcommand (e.g., "pinboard --raw bookmarks"). You can then pipe that data into any program that parses JSON.
+All of the commands pre-process and indent the JSON output. If you would like to shoot the raw response data to stdout, just pass "--raw" before the subcommand (e.g., "pinboard --raw bookmarks").
+
+Examples:
+
+.. code-block::
+
+   $ pinboard login
+   Enter your Pinboard API token: username:XXXXX
+   Saved Pinboard credentials to ~/.pinboardrc
+   $ pinboard suggest-tags --url http://pymotw.com/2/argparse/
+   [
+       {
+           "popular": [
+               "python"
+           ]
+       },
+       {
+           "recommended": [
+               "python",
+               "argument",
+               "parsing"
+           ]
+       }
+   ]
+   $ pinboard get --date 7-13-2014
+   {
+       "date": "2014-07-13T03:03:58Z",
+       "posts": [
+           {
+               "extended": "",
+               "hash": "e2311835eb0de6bff2595a9b1525bb98",
+               "description": "Python 2.7.x and Python 3.x key differences",
+               "tags": "python",
+               "href": "http://sebastianraschka.com/Articles/2014_python_2_3_key_diff.html",
+               "meta": "561d1f53791a8c50109393411f0301fc",
+               "time": "2014-07-13T03:03:58Z",
+               "shared": "yes",
+               "toread": "no"
+           },
+           {
+               "extended": "",
+               "hash": "4abe28f70154bd35f84be73cec0c53ef",
+               "description": "Miami, the great world city, is drowning while the powers that be look away | World news | The Observer",
+               "tags": "",
+               "href": "http://www.theguardian.com/world/2014/jul/11/miami-drowning-climate-change-deniers-sea-levels-rising",
+               "meta": "2ca547789553ba9d3202a5cd3d367685",
+               "time": "2014-07-13T02:53:54Z",
+               "shared": "yes",
+               "toread": "yes"
+           }
+       ],
+       "user": "dlo"
+   }
+   $ pinboard --raw get --date 7/13/2014
+   {"date":"2014-07-13T03:03:58Z","user":"dlo","posts":[{"href":"http:\/\/sebastianraschka.com\/Articles\/2014_python_2_3_key_diff.html","description":"Python 2.7.x and Python 3.x key differences","extended":"","meta":"561d1f53791a8c50109393411f0301fc","hash":"e2311835eb0de6bff2595a9b1525bb98","time":"2014-07-13T03:03:58Z","shared":"yes","toread":"no","tags":"python"},{"href":"http:\/\/www.theguardian.com\/world\/2014\/jul\/11\/miami-drowning-climate-change-deniers-sea-levels-rising","description":"Miami, the great world city, is drowning while the powers that be look away | World news | The Observer","extended":"","meta":"2ca547789553ba9d3202a5cd3d367685","hash":"4abe28f70154bd35f84be73cec0c53ef","time":"2014-07-13T02:53:54Z","shared":"yes","toread":"yes","tags":""}]}
 
 License
 -------
