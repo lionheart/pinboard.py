@@ -8,7 +8,7 @@ Pinboard.py
 
 .. image:: http://img.shields.io/pypi/l/pinboard.png?style=flat
 
-.. image:: http://img.shields.io/pypi/v/pinboard.svg
+.. image:: http://img.shields.io/pypi/v/pinboard.png?style=flat
 
 Pinboard.py is an easy-to-use and fully-functional Python wrapper and `command-line utility <#command-line>`_ for the Pinboard.in API.
 
