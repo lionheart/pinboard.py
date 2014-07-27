@@ -8,6 +8,7 @@ import os
 import sys
 import tempfile
 import pprint
+import json
 
 import pinboard
 
@@ -66,7 +67,7 @@ class PinboardCommandLineHandler(object):
 
     def _call_api_and_catch_exceptions(self, fun, handler=None, *args, **kwargs):
         try:
-            response = fun(parse_response=not self.namespace.raw, *args, **kwargs)
+            response = fun(parse_response=False, *args, **kwargs)
         except pinboard.PinboardServerError:
             print "HTTP Error 500: Internal Server Error. Either you have " \
                     "provided invalid credentials or the Pinboard API " \
@@ -76,10 +77,13 @@ class PinboardCommandLineHandler(object):
             if self.namespace.raw:
                 print response.read()
             else:
+                json_response = json.load(response)
                 if handler is None:
-                    pprint.pprint(response)
+                    print json.dumps(json_response, indent=4)
                 else:
-                    handler(response)
+                    value = handler(json_response)
+                    if value is not None:
+                        print value
 
     def _bookmarks_action(self):
         kwargs = {}
@@ -92,14 +96,11 @@ class PinboardCommandLineHandler(object):
         if self.namespace.offset is not None:
             kwargs['start'] = self.namespace.offset
 
-        if self.namespace.include_meta is not None:
-            kwargs['meta'] = self.namespace.include_meta
-
         if self.namespace.from_date is not None:
-            kwargs['fromdt'] = self.namespace.fromdt
+            kwargs['fromdt'] = self.namespace.from_date
 
         if self.namespace.to_date is not None:
-            kwargs['todt'] = self.namespace.todt
+            kwargs['todt'] = self.namespace.to_date
 
         self._call_api_and_catch_exceptions(self.pinboard.posts.all, **kwargs)
 
@@ -109,7 +110,7 @@ class PinboardCommandLineHandler(object):
             kwargs['tag'] = self.namespace.tags
 
         if self.namespace.count is not None:
-            kwargs['results'] = self.namespace.count
+            kwargs['count'] = self.namespace.count
 
         self._call_api_and_catch_exceptions(self.pinboard.posts.recent, **kwargs)
 
@@ -120,9 +121,6 @@ class PinboardCommandLineHandler(object):
 
         if self.namespace.url is not None:
             kwargs['url'] = self.namespace.url
-
-        if self.namespace.include_meta is not None:
-            kwargs['meta'] = self.namespace.include_meta
 
         if self.namespace.date is not None:
             kwargs['dt'] = self.namespace.date
@@ -169,13 +167,13 @@ class PinboardCommandLineHandler(object):
         self._call_api_and_catch_exceptions(self.pinboard.posts.suggest, **kwargs)
 
     def _tags_action(self):
-        def handler(tags):
-            max_title_length = max(len(tag.name) for tag in tags)
+        def handler(response):
+            max_title_length = max(len(tag) for tag in response.keys())
             row_format = "{:<" + str(max_title_length) + "}  {:<6}"
 
             print row_format.format("Tag", "Count")
-            for tag in tags:
-                print row_format.format(tag.name, tag.count)
+            for tag, count in response.iteritems():
+                print row_format.format(tag, count)
 
         self._call_api_and_catch_exceptions(self.pinboard.tags.get, handler)
 
@@ -200,13 +198,13 @@ class PinboardCommandLineHandler(object):
         def handler(response):
             print response['result']
 
-        self._call_api_and_catch_exceptions(self.pinboard.user.secret, handler)
+        self._call_api_and_catch_exceptions(self.pinboard.user.secret)
 
     def _api_token_action(self):
         def handler(response):
             print response['result']
 
-        self._call_api_and_catch_exceptions(self.pinboard.user.api_token, handler)
+        self._call_api_and_catch_exceptions(self.pinboard.user.api_token)
 
     def _notes_action(self):
         def handler(response):
@@ -221,29 +219,32 @@ class PinboardCommandLineHandler(object):
 
             print row_format.format(*headers)
             for note in notes:
+                created_at = pinboard.Pinboard.datetime_from_string(note['created_at'])
+                updated_at = pinboard.Pinboard.datetime_from_string(note['updated_at'])
+
                 print row_format.format(
                     note['id'],
                     note['title'],
                     note['length'],
-                    note['created_at'].strftime("%c"),
-                    note['updated_at'].strftime("%c")
+                    created_at.strftime("%c"),
+                    updated_at.strftime("%c")
                 )
 
-        self._call_api_and_catch_exceptions(self.pinboard.notes.list, handler)
+        self._call_api_and_catch_exceptions(self.pinboard.notes.list)
 
     def _note_action(self):
         def handler(note):
-            print note['text']
+            return note['text']
 
         id = self.namespace.id
-        self._call_api_and_catch_exceptions(self.pinboard.notes[id], handler)
+        self._call_api_and_catch_exceptions(self.pinboard.notes[id])
 
     def _last_update_action(self):
         def handler(response):
-            dt = response['update_time']
-            print dt.strftime("%B %d %Y, %r %Z")
+            dt = pinboard.Pinboard.datetime_from_string(response['update_time'])
+            return dt.strftime("%B %d %Y, %r %Z")
 
-        self._call_api_and_catch_exceptions(self.pinboard.posts.update, handler)
+        self._call_api_and_catch_exceptions(self.pinboard.posts.update)
 
     def run(self):
         command_map = {
@@ -288,7 +289,6 @@ if __name__ == "__main__":
     parser_bookmarks.add_argument("--from_date", action=DateAction, default=None)
     parser_bookmarks.add_argument("--to_date", action=DateAction, default=None)
     parser_bookmarks.add_argument("--tags", nargs='+', type=str, default=[])
-    parser_bookmarks.add_argument("--include_meta", type=bool, default=True)
     parser_bookmarks.add_argument("--count", type=int, default=None)
     parser_bookmarks.add_argument("--offset", type=int, default=None)
 
@@ -300,7 +300,6 @@ if __name__ == "__main__":
     parser_get.add_argument("--tags", nargs='+', type=str, default=[])
     parser_get.add_argument("--date", action=DateAction, default=None)
     parser_get.add_argument("--url", type=str, default=None)
-    parser_get.add_argument("--include_meta", type=bool, default=True)
 
     parser_add = subparsers.add_parser("add")
     parser_add.add_argument("--url", type=str, default=None, required=True)
@@ -314,7 +313,8 @@ if __name__ == "__main__":
         default=True, action=BoolAction("--unread"))
 
     parser_delete = subparsers.add_parser("delete")
-    parser_delete.add_argument("--url", type=str, default=None, required=True)
+    parser_delete.add_argument("--url", type=str, default=None, required=True,
+            help="URL of the bookmark to delete.")
 
     parser_suggest_tags = subparsers.add_parser("suggest-tags")
     parser_suggest_tags.add_argument("--url", type=str, default=None, required=True)

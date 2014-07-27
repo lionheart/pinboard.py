@@ -3,6 +3,7 @@ import json
 import operator
 import urllib
 import urllib2
+import logging
 
 import exceptions
 
@@ -62,7 +63,7 @@ class Tag(object):
 
 class Pinboard(object):
     DATE_FIELDS = ["dt", "date", "update_time", "created_at", "updated_at"]
-    BOOLEAN_FIELDS = ["meta", "replace", "shared", "toread"]
+    BOOLEAN_FIELDS = ["replace", "shared", "toread"]
     SPACE_DELIMITED_FIELDS = ["tag", "tags"]
 
     def __init__(self, token):
@@ -109,10 +110,10 @@ class PinboardCall(object):
 
         parse_response = kwargs.get('parse_response', True)
 
-        params = kwargs.copy()
+        if 'parse_response' in kwargs:
+            del kwargs['parse_response']
 
-        if 'parse_response' in params:
-            del params['parse_response']
+        params = kwargs.copy()
 
         for field in Pinboard.DATE_FIELDS:
             if field in kwargs:
@@ -137,6 +138,9 @@ class PinboardCall(object):
 
         params['format'] = "json"
         params['auth_token'] = self.token
+
+        if 'meta' in params:
+            params['meta'] = 1 if kwargs['meta'] else 0
 
         query_string = urllib.urlencode(params)
         final_url = "{}?{}".format(url, query_string)
