@@ -6,8 +6,13 @@ Pinboard.py
 |ci|   |version|   |downloads|
 
 .. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.png?style=flat
+.. _ci: https://travis-ci.org/lionheart/pinboard.py
+
 .. |downloads| image:: http://img.shields.io/pypi/dm/pinboard.png?style=flat
+.. _downloads: https://pypi.python.org/pypi/pinboard
+
 .. |version| image:: http://img.shields.io/pypi/v/pinboard.png?style=flat
+.. _version: https://pypi.python.org/pypi/pinboard
 
 Pinboard.py is an easy-to-use and fully-functional Python wrapper and `command-line utility <#command-line>`_ for the Pinboard.in API.
 
