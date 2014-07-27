@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from pinboard import Pinboard
+import ConfigParser
 import datetime
 import os
 import unittest
@@ -36,7 +37,19 @@ class TestPinboardAPIPropagation(unittest.TestCase):
 
 class TestPinboardAPI(unittest.TestCase):
     def setUp(self):
-        self.pinboard = Pinboard(os.environ['PINBOARD_API_TOKEN'])
+        api_token = os.environ.get('PINBOARD_API_TOKEN', None)
+        if api_token is None:
+            try:
+                config_file = os.path.expanduser("~/.pinboardrc")
+                config = ConfigParser.RawConfigParser()
+                with open(config_file, "r") as f:
+                    config.readfp(f)
+            except:
+                raise
+            else:
+                api_token = config.get("authentication", "api_token")
+
+        self.pinboard = Pinboard(api_token)
 
         response = self.pinboard.posts.recent(count=1, date=datetime.date.today())
         bookmark = response['posts'][0]
