@@ -338,7 +338,7 @@ You can print a full list of pinboard commands by passing the "-h" flag.
 Donate
 ------
 
-If you like this library, consider supporting me on Gittip.
+If you like this library, consider supporting development through Gittip! :)
 
 .. image:: http://img.shields.io/gittip/dlo.png?style=flat
    :target: https://www.gittip.com/dlo/
