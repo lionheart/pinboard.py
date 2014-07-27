@@ -347,6 +347,7 @@ License
 -------
 
 .. image:: http://img.shields.io/pypi/l/pinboard.png?style=flat
+   :target: LICENSE
 
 Apache License, Version 2.0. See `LICENSE <LICENSE>`_ for details.
 
