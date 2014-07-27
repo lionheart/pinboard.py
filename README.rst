@@ -221,7 +221,7 @@ All of the commands pre-process and indent the JSON output. If you would like to
 
 Examples:
 
-.. code-block::
+.. code-block:: sh
 
    $ pinboard login
    Enter your Pinboard API token: username:XXXXX
