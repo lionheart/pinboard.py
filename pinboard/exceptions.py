@@ -1,5 +1,8 @@
 import urllib2
 
+class PinboardError(Exception):
+    pass
+
 class PinboardServerError(urllib2.HTTPError):
     pass
 

@@ -5,6 +5,7 @@ from .pinboard import Tag
 from .exceptions import PinboardAuthenticationError
 from .exceptions import PinboardForbiddenError
 from .exceptions import PinboardServerError
+from .exceptions import PinboardError
 
 from .metadata import (
     __author__,
@@ -25,6 +26,7 @@ __all__ = [
     'PinboardAuthenticationError',
     'PinboardForbiddenError',
     'PinboardServerError',
+    'PinboardError',
     'Pinboard',
     'Bookmark',
     'Tag'

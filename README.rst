@@ -36,7 +36,7 @@ Returns the most recent time a bookmark was added, updated or deleted.
 .. code-block:: pycon
 
    >>> pb.posts.update()
-   {u'update_time': datetime.datetime(2014, 7, 25, 15, 4, 33)}
+   datetime.datetime(2014, 7, 27, 18, 11, 29)
 
 Posts
 '''''

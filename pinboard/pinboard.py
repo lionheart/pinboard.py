@@ -201,6 +201,11 @@ class PinboardCall(object):
                         for field in Pinboard.DATE_FIELDS:
                             if field in note:
                                 note[field] = Pinboard.datetime_from_string(note[field])
+                elif 'result_code' in json_response:
+                    if json_response['result_code'] == "done":
+                        return True
+                    else:
+                        raise exceptions.PinboardError(json_response['result_code'])
 
                 return json_response
             else:
