@@ -347,7 +347,7 @@ If you like this library, consider supporting me on Gittip.
 License
 -------
 
-.. image:: http://img.shields.io/pypi/v/pinboard.png?style=flat
+.. image:: http://img.shields.io/pypi/l/pinboard.png?style=flat
 
 Apache License, Version 2.0. See `LICENSE <LICENSE>`_ for details.
 
