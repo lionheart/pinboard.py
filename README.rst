@@ -3,7 +3,7 @@ Pinboard.py
 
 .. https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
 
-|ci|   |version|   |downloads|
+|ci|_   |version|_   |downloads|_
 
 .. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.png?style=flat
 .. _ci: https://travis-ci.org/lionheart/pinboard.py
