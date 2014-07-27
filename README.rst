@@ -6,6 +6,10 @@ Pinboard.py
 
 .. image:: http://img.shields.io/pypi/dm/pinboard.png?style=flat
 
+.. image:: http://img.shields.io/pypi/l/pinboard.png?style=flat
+
+.. image:: http://img.shields.io/pypi/v/pinboard.svg
+
 Pinboard.py is an easy-to-use and fully-functional Python wrapper and `command-line utility <#command-line>`_ for the Pinboard.in API.
 
 Installation
@@ -326,6 +330,14 @@ You can print a full list of pinboard commands by passing the "-h" flag.
      --tags TAGS [TAGS ...]
      --count COUNT
      --offset OFFSET
+
+Donate
+------
+
+If you like this library, consider supporting me on Gittip.
+
+.. image:: http://img.shields.io/gittip/dlo.png?style=flat
+:target: https://www.gittip.com/dlo/
 
 License
 -------
