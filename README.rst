@@ -3,6 +3,7 @@ Pinboard.py
 
 .. https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
 .. image:: https://api.travis-ci.org/lionheart/pinboard.py.svg
+
 .. image:: http://img.shields.io/pypi/dm/pinboard.png
 
 Pinboard.py is an easy-to-use and fully-functional Python wrapper and `command-line utility <#command-line>`_ for the Pinboard.in API.
