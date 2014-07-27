@@ -6,11 +6,11 @@ Pinboard.py
 +-------------+
 | |ci|        |
 +-------------+
+| |version|   |
++-------------+
 | |downloads| |
 +-------------+
 | |license|   |
-+-------------+
-| |version|   |
 +-------------+
 
 .. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.png?style=flat
