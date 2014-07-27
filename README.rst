@@ -4,11 +4,11 @@ Pinboard.py
 .. https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
 .. image:: https://api.travis-ci.org/lionheart/pinboard.py.svg
 
-&nbsp;
+ 
 
 .. image:: http://img.shields.io/pypi/dm/pinboard.png?style=flat
 
-&nbsp;
+ 
 
 .. image:: http://img.shields.io/pypi/l/pinboard.png?style=flat
 
