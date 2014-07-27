@@ -53,17 +53,21 @@ class PinboardCommandLineHandler(object):
     def _login_action(self):
         api_token = ""
         while ":" not in api_token:
-            api_token = raw_input("Enter your Pinboard API token: ")
+            try:
+                api_token = raw_input("Enter your Pinboard API token: ")
+            except KeyboardInterrupt:
+                print
+                break
+        else:
+            config = ConfigParser.RawConfigParser()
+            config.add_section("authentication")
+            config.set("authentication", "api_token", api_token)
 
-        config = ConfigParser.RawConfigParser()
-        config.add_section("authentication")
-        config.set("authentication", "api_token", api_token)
+            with open(self.config_file, "wb") as f:
+                config.write(f)
 
-        with open(self.config_file, "wb") as f:
-            config.write(f)
-
-        print "Saved Pinboard credentials to ~/.pinboardrc"
-        return api_token
+            print "Saved Pinboard credentials to ~/.pinboardrc"
+            return api_token
 
     def _call_api_and_catch_exceptions(self, fun, handler=None, *args, **kwargs):
         try:
