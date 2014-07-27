@@ -291,6 +291,23 @@ You can print a full list of pinboard commands by passing the "-h" flag.
      --raw                 Print the raw data from the Pinboard API without any
                            formatting.
 
+...or help for a specific subcommand by passing the subcommand and then the "-h" flag.
+
+.. code-block:: sh
+
+   $ pinboard bookmarks -h
+   usage: pinboard bookmarks [-h] [--from_date FROM_DATE] [--to_date TO_DATE]
+                             [--tags TAGS [TAGS ...]] [--count COUNT]
+                             [--offset OFFSET]
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     --from_date FROM_DATE
+     --to_date TO_DATE
+     --tags TAGS [TAGS ...]
+     --count COUNT
+     --offset OFFSET
+
 License
 -------
 
