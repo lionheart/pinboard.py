@@ -48,7 +48,7 @@ Add a bookmark:
    >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", \
            extended="This is a description!", tags=["search", "tools"], shared=True, \
            toread=False)
-   {u'result_code': u'done'}
+   True
 
 Update a bookmark:
 
@@ -63,7 +63,7 @@ Update a bookmark:
    >>> bookmark.description = "Google is pretty awesome"
    >>> bookmark.tags = ["search", "searching"]
    >>> bookmark.save()
-   {u'result_code': u'done'}
+   True
 
    # If you want to update the bookmark creation date as well, you'll need to pass in `update_time=True` to the save method
    >>> import datetime
@@ -75,7 +75,7 @@ Delete a bookmark:
 .. code-block:: pycon
 
    >>> pb.posts.delete(url="http://google.com/")
-   {u'result_code': u'done'}
+   True
 
 Get one or more posts on a single day matching the parameters:
 
@@ -188,14 +188,14 @@ Delete a tag:
 .. code-block:: pycon
 
    >>> pb.tags.delete(tag="zynga")
-   {u'result': u'done'}
+   True
 
 Rename a tag:
 
 .. code-block:: pycon
 
    >>> pb.tags.rename(old='ppython', new='python')
-   {u'result': u'done'}
+   True
 
 Miscellaneous
 '''''''''''''
