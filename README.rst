@@ -5,13 +5,13 @@ Pinboard.py
 
 |ci|_   |version|_   |downloads|_
 
-.. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.png?style=flat
+.. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.svg?style=flat
 .. _ci: https://travis-ci.org/lionheart/pinboard.py
 
-.. |downloads| image:: http://img.shields.io/pypi/dm/pinboard.png?style=flat
+.. |downloads| image:: http://img.shields.io/pypi/dm/pinboard.svg?style=flat
 .. _downloads: https://pypi.python.org/pypi/pinboard
 
-.. |version| image:: http://img.shields.io/pypi/v/pinboard.png?style=flat
+.. |version| image:: http://img.shields.io/pypi/v/pinboard.svg?style=flat
 .. _version: https://pypi.python.org/pypi/pinboard
 
 Pinboard.py is an easy-to-use and fully-functional Python wrapper and `command-line utility <#command-line>`_ for the Pinboard.in API.
@@ -340,13 +340,13 @@ Donate
 
 If you like this library, consider supporting development through Gittip! :)
 
-.. image:: http://img.shields.io/gittip/dlo.png?style=flat
+.. image:: http://img.shields.io/gittip/dlo.svg?style=flat
    :target: https://www.gittip.com/dlo/
 
 License
 -------
 
-.. image:: http://img.shields.io/pypi/l/pinboard.png?style=flat
+.. image:: http://img.shields.io/pypi/l/pinboard.svg?style=flat
    :target: LICENSE
 
 Apache License, Version 2.0. See `LICENSE <LICENSE>`_ for details.
