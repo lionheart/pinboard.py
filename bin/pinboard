@@ -289,6 +289,9 @@ if __name__ == "__main__":
     parser.add_argument("--raw", action='store_true', default=False, help="Print the raw data from the Pinboard API without any formatting.")
 
     subparsers = parser.add_subparsers(dest="subparser")
+    subparsers.add_parser("login")
+    subparsers.add_parser("last-update")
+
     parser_bookmarks = subparsers.add_parser("bookmarks")
     parser_bookmarks.add_argument("--from_date", action=DateAction, default=None)
     parser_bookmarks.add_argument("--to_date", action=DateAction, default=None)
@@ -320,6 +323,8 @@ if __name__ == "__main__":
     parser_delete.add_argument("--url", type=str, default=None, required=True,
             help="URL of the bookmark to delete.")
 
+    subparsers.add_parser("tags")
+
     parser_suggest_tags = subparsers.add_parser("suggest-tags")
     parser_suggest_tags.add_argument("--url", type=str, default=None, required=True)
 
@@ -330,13 +335,10 @@ if __name__ == "__main__":
     parser_rename_tag.add_argument("--old", type=str, default=None, required=True)
     parser_rename_tag.add_argument("--new", type=str, default=None, required=True)
 
+    subparsers.add_parser("notes")
     parser_note = subparsers.add_parser("note")
     parser_note.add_argument("--id", type=str, default=None, required=True)
 
-    subparsers.add_parser("last-update")
-    subparsers.add_parser("tags")
-    subparsers.add_parser("notes")
-    subparsers.add_parser("login")
     subparsers.add_parser("rss-key")
     subparsers.add_parser("api-token")
 
