@@ -7,6 +7,8 @@ import os
 import unittest
 import functools
 import time
+import random
+import string
 
 class TestPinboardAPIPropagation(unittest.TestCase):
     def setUp(self):
@@ -61,23 +63,26 @@ class TestPinboardAPI(unittest.TestCase):
         response = self.pinboard.posts.get(url=self.url, meta="yes")
         return response['posts'][0]
 
-    def retry_until_true(self, fun):
+    def retry_until_true(self, fun, msg=None, max_seconds=32):
         """
         Retries a test until it resolves to True, backing off and doubling
         the time in between retries.
         """
         seconds = 1
-        while seconds < 16:
+        while seconds < max_seconds:
             result = fun()
 
-            suffix = "s" if seconds != 1 else ""
-            self.assertTrue(result, msg="Meta failed to update after {} second{}.".format(seconds, suffix))
-
             if result:
+                # print "\nSucceeded after {} seconds".format(seconds),
                 break
             else:
-                time.sleep(seconds)
                 seconds *= 2
+                time.sleep(seconds)
+        else:
+            if msg:
+                self.assertTrue(result, msg="{} ({} second backoff).".format(msg, max_seconds))
+            else:
+                self.assertTrue(result)
 
     def ensure_last_update_time_changed(fun):
         """
@@ -85,15 +90,22 @@ class TestPinboardAPI(unittest.TestCase):
         bookmarks were edited
         """
         @functools.wraps(fun)
-        def inner(self):
+        def inner(self, *args, **kwargs):
             update_time_1 = self.pinboard.posts.update()
 
-            fun(self)
+            fun(self, *args, **kwargs)
 
             update_time_2 = self.pinboard.posts.update()
-            self.assertTrue(update_time_2 > update_time_1)
+
+            self.retry_until_true(lambda: update_time_2 > update_time_1,
+                    msg="{} == {}".format(update_time_1, update_time_2),
+                    max_seconds=16)
 
         return inner
+
+    def check_meta_updated(self, bookmark_1, bookmark_2):
+        self.retry_until_true(lambda: bookmark_1 <> bookmark_2,
+                msg="{} == {}".format(bookmark_1.meta, bookmark_2.meta))
 
     @ensure_last_update_time_changed
     def test_add_and_remove_tag_through_api(self):
@@ -102,14 +114,14 @@ class TestPinboardAPI(unittest.TestCase):
         bookmark.save()
 
         updated_bookmark = self.bookmark()
-        self.retry_until_true(lambda: bookmark <> updated_bookmark)
+        self.check_meta_updated(bookmark, updated_bookmark)
 
         bookmark = updated_bookmark
         bookmark.tags.remove("testing")
         bookmark.save()
 
         updated_bookmark = self.bookmark()
-        self.retry_until_true(lambda: bookmark <> updated_bookmark)
+        self.check_meta_updated(bookmark, updated_bookmark)
 
     @ensure_last_update_time_changed
     def test_change_privacy_through_api(self):
@@ -118,14 +130,14 @@ class TestPinboardAPI(unittest.TestCase):
         bookmark.save()
 
         updated_bookmark = self.bookmark()
-        self.retry_until_true(lambda: bookmark <> updated_bookmark)
+        self.check_meta_updated(bookmark, updated_bookmark)
 
         bookmark = updated_bookmark
         bookmark.shared = not bookmark.shared
         bookmark.save()
 
         updated_bookmark = self.bookmark()
-        self.retry_until_true(lambda: bookmark <> updated_bookmark)
+        self.check_meta_updated(bookmark, updated_bookmark)
 
     @ensure_last_update_time_changed
     def test_change_read_status_through_api(self):
@@ -134,16 +146,29 @@ class TestPinboardAPI(unittest.TestCase):
         bookmark.save()
 
         updated_bookmark = self.bookmark()
-        self.retry_until_true(lambda: bookmark <> updated_bookmark)
+        self.check_meta_updated(bookmark, updated_bookmark)
 
         bookmark = updated_bookmark
         bookmark.toread = not bookmark.toread
         bookmark.save()
 
         updated_bookmark = self.bookmark()
-        self.retry_until_true(lambda: bookmark <> updated_bookmark)
+        self.check_meta_updated(bookmark, updated_bookmark)
 
-        last_updated = self.pinboard.posts.update()
+    @ensure_last_update_time_changed
+    def _test_add_bookmark_through_api(self, url):
+        self.pinboard.posts.add(url=url, description="Test Bookmark")
+
+    @ensure_last_update_time_changed
+    def _test_delete_bookmark_through_api(self, url):
+        self.pinboard.posts.delete(url=url)
+
+    def test_add_and_remove_bookmark_through_api(self):
+        random_suffix = "".join(random.choice(string.letters) for i in range (6))
+        url = "http://example.com/{}".format(random_suffix)
+
+        self._test_add_bookmark_through_api(url)
+        self._test_delete_bookmark_through_api(url)
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPinboardAPI)
