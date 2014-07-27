@@ -286,7 +286,7 @@ def BoolAction(true_choice):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='pinboard')
-    parser.add_argument("--raw", action='store_true', default=False)
+    parser.add_argument("--raw", action='store_true', default=False, help="Print the raw data from the Pinboard API without any formatting.")
 
     subparsers = parser.add_subparsers(dest="subparser")
     parser_bookmarks = subparsers.add_parser("bookmarks")

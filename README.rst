@@ -273,6 +273,24 @@ Examples:
    $ pinboard --raw get --date 7/13/2014
    {"date":"2014-07-13T03:03:58Z","user":"dlo","posts":[{"href":"http:\/\/sebastianraschka.com\/Articles\/2014_python_2_3_key_diff.html","description":"Python 2.7.x and Python 3.x key differences","extended":"","meta":"561d1f53791a8c50109393411f0301fc","hash":"e2311835eb0de6bff2595a9b1525bb98","time":"2014-07-13T03:03:58Z","shared":"yes","toread":"no","tags":"python"},{"href":"http:\/\/www.theguardian.com\/world\/2014\/jul\/11\/miami-drowning-climate-change-deniers-sea-levels-rising","description":"Miami, the great world city, is drowning while the powers that be look away | World news | The Observer","extended":"","meta":"2ca547789553ba9d3202a5cd3d367685","hash":"4abe28f70154bd35f84be73cec0c53ef","time":"2014-07-13T02:53:54Z","shared":"yes","toread":"yes","tags":""}]}
 
+You can print a full list of pinboard commands by passing the "-h" flag.
+
+.. code-block:: sh
+
+   $ pinboard -h
+   usage: pinboard [-h] [--raw]
+
+                   {bookmarks,recent,get,add,delete,suggest-tags,delete-tag,rename-tag,note,last-update,tags,notes,login,rss-key,api-token}
+                   ...
+
+   positional arguments:
+     {bookmarks,recent,get,add,delete,suggest-tags,delete-tag,rename-tag,note,last-update,tags,notes,login,rss-key,api-token}
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     --raw                 Print the raw data from the Pinboard API without any
+                           formatting.
+
 License
 -------
 
