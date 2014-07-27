@@ -339,10 +339,8 @@ Donate
 
 If you like this library, consider supporting me on Gittip.
 
-|gittip|_
-
-.. |gittip| image:: http://img.shields.io/gittip/dlo.png?style=flat
-.. _gittip: https://www.gittip.com/dlo/
+.. image:: http://img.shields.io/gittip/dlo.png?style=flat
+   :target: https://www.gittip.com/dlo/
 
 License
 -------
