@@ -352,13 +352,10 @@ You can print a full list of pinboard commands by passing the "-h" flag.
      --offset OFFSET
 
 
-Donate
-------
+Support
+-------
 
-If you like this library, consider supporting development through Gittip! :)
-
-.. image:: http://img.shields.io/gittip/dlo.svg?style=flat
-   :target: https://www.gittip.com/dlo/
+If you like this library, you might want to check out `Pushpin <https://itunes.apple.com/us/app/pushpin-for-pinboard/id548052590?mt=8&amp;uo=4&amp;at=1l3vbEC>`_, a Pinboard app for iOS.
 
 License
 -------
