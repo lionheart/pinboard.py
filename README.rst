@@ -21,7 +21,7 @@ Installation
 
 Pinboard.py is available for download through the Python Package Index (PyPi). You can install it right away using pip or easy_install.
 
-.. code-block:: bash
+.. code:: bash
 
    pip install pinboard
 
@@ -32,7 +32,7 @@ Usage
 
 To get started, you're going to need to get your Pinboard API token from the `password page <https://pinboard.in/settings/password>`_ on the Pinboard website. Once you've got that, you're ready to go.
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> import pinboard
    >>> pb = pinboard.Pinboard(api_token)
@@ -44,26 +44,28 @@ Update
 
 Returns the most recent time a bookmark was added, updated or deleted.
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.update()
    datetime.datetime(2014, 7, 27, 18, 11, 29)
+
 
 Posts
 '''''
 
 Add a bookmark:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.add(url="http://google.com/", description="A Great Search Engine", \
            extended="This is a description!", tags=["search", "tools"], shared=True, \
            toread=False)
    True
 
+
 Update a bookmark:
 
-.. code-block:: pycon
+.. code:: pycon
 
    # First, retrieve the bookmark you'd like to edit
    >>> bookmark = pb.posts.get(url='http://google.com/')['posts'][0]
@@ -81,16 +83,18 @@ Update a bookmark:
    >>> bookmark.time = datetime.datetime.now() - datetime.timedelta(days=5)
    >>> bookmark.save(update_time=True)
 
+
 Delete a bookmark:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.delete(url="http://google.com/")
    True
 
+
 Get one or more posts on a single day matching the parameters:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.get(url="http://google.com/")
    {u'date': datetime.datetime(2014, 7, 25, 16, 35, 25),
@@ -105,9 +109,10 @@ Get one or more posts on a single day matching the parameters:
      <Bookmark description="Apple "Frustrated" that "People Don't Want to Pay Anything" on Mobile, Says 'The Banner Saga' Developer | Touch Arcade" url="toucharcade.com">],
     u'user': u'dlo'}
 
+
 Return all recent bookmarks (optionally filtering by tag):
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.recent(tag=["programming", "python"])
    {u'date': datetime.datetime(2014, 4, 28, 2, 7, 58),
@@ -129,9 +134,10 @@ Return all recent bookmarks (optionally filtering by tag):
      <Bookmark description="litl/rauth" url="github.com">],
     u'user': u'dlo'}
 
+
 Return a list of dates with the number of posts at each date:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.dates(tag=["programming", "python"])
    {u'dates': {datetime.date(2008, 12, 5): 1,
@@ -142,9 +148,10 @@ Return a list of dates with the number of posts at each date:
     u'tag': u'programming+python',
     u'user': u'dlo'}
 
+
 Get all bookmarks in your account:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.all()
    [<Bookmark description="Of Princesses and Dragons" url="medium.com">
@@ -153,9 +160,10 @@ Get all bookmarks in your account:
     <Bookmark description="Runner Econ 101 - StimHa" url="stimhack.com">,
     <Bookmark description="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
 
+
 You can also filter by tag, start, results, fromdt, or todt.
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> import datetime
    >>> five_days_ago = datetime.datetime.now() - datetime.timedelta(days=5)
@@ -166,12 +174,13 @@ You can also filter by tag, start, results, fromdt, or todt.
     <Bookmark description="Runner Econ 101 - StimHa" url="stimhack.com">,
     <Bookmark description="서인국, 탄탄 근육+ 태평양 어깨…어부바 부른다 : 네이" url="news.naver.com">]
 
+
 Tags
 ''''
 
 Suggest tags for a given URL:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.posts.suggest(url="https://pinboard.in")
    [{u'popular': [u'pinboard']},
@@ -182,9 +191,10 @@ Suggest tags for a given URL:
       u'Unread',
       u'webservice']}]
 
+
 Return all tags in your account along with the number of times they were used:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.tags.get()
    [<Tag name="absurd" count=1>,
@@ -194,32 +204,36 @@ Return all tags in your account along with the number of times they were used:
     <Tag name="zsh" count=1>,
     <Tag name="zynga" count=1>]
 
+
 Delete a tag:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.tags.delete(tag="zynga")
    True
 
+
 Rename a tag:
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> pb.tags.rename(old='ppython', new='python')
    True
+
 
 Miscellaneous
 '''''''''''''
 
 By default, pinboard.py will return parsed JSON objects. If you'd like the raw response object for a request, just pass in `parse_response=False`.
 
-.. code-block:: pycon
+.. code:: pycon
 
    >>> response = pb.tags.get(parse_response=False)
    >>> response
    <addinfourl at 4396047680 whose fp = <socket._fileobject object at 0x105f79850>>
    >>> response.read()
    ... your tags ...
+
 
 Pinboard.py maps 1-1 to the Pinboard API (e.g., pb.one.two.three() will send a request to "https://api.pinboard.in/v1/one/two/three"). For more information on other methods and usage, please read the `Pinboard API documentation <https://pinboard.in/api/>`_.
 
@@ -234,7 +248,7 @@ All of the commands pre-process and indent the JSON output. If you would like to
 
 Examples:
 
-.. code-block:: sh
+.. code:: sh
 
    $ pinboard login
    Enter your Pinboard API token: username:XXXXX
@@ -286,9 +300,10 @@ Examples:
    $ pinboard --raw get --date 7/13/2014
    {"date":"2014-07-13T03:03:58Z","user":"dlo","posts":[{"href":"http:\/\/sebastianraschka.com\/Articles\/2014_python_2_3_key_diff.html","description":"Python 2.7.x and Python 3.x key differences","extended":"","meta":"561d1f53791a8c50109393411f0301fc","hash":"e2311835eb0de6bff2595a9b1525bb98","time":"2014-07-13T03:03:58Z","shared":"yes","toread":"no","tags":"python"},{"href":"http:\/\/www.theguardian.com\/world\/2014\/jul\/11\/miami-drowning-climate-change-deniers-sea-levels-rising","description":"Miami, the great world city, is drowning while the powers that be look away | World news | The Observer","extended":"","meta":"2ca547789553ba9d3202a5cd3d367685","hash":"4abe28f70154bd35f84be73cec0c53ef","time":"2014-07-13T02:53:54Z","shared":"yes","toread":"yes","tags":""}]}
 
+
 You can print a full list of pinboard commands by passing the "-h" flag.
 
-.. code-block:: sh
+.. code:: sh
 
    $ pinboard -h
    usage: pinboard [-h] [--raw]
@@ -312,15 +327,16 @@ You can print a full list of pinboard commands by passing the "-h" flag.
        note                notes/ID
        rss-key             user/secret
        api-token           user/api_token
-   
+
    optional arguments:
      -h, --help            show this help message and exit
      --raw                 Print the raw data from the Pinboard API without any
                            formatting.
 
+
 ...or help for a specific subcommand by passing the subcommand and then the "-h" flag.
 
-.. code-block:: sh
+.. code:: sh
 
    $ pinboard bookmarks -h
    usage: pinboard bookmarks [-h] [--from_date FROM_DATE] [--to_date TO_DATE]
@@ -334,6 +350,7 @@ You can print a full list of pinboard commands by passing the "-h" flag.
      --tags TAGS [TAGS ...]
      --count COUNT
      --offset OFFSET
+
 
 Donate
 ------
