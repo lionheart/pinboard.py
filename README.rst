@@ -355,7 +355,7 @@ You can print a full list of pinboard commands by passing the "-h" flag.
 Support
 -------
 
-If you like this library, you might want to check out `Pushpin <https://itunes.apple.com/us/app/pushpin-for-pinboard/id548052590?mt=8&amp;uo=4&amp;at=1l3vbEC>`_, a Pinboard app for iOS.
+If you like this library, you might want to check out `Pushpin for Pinboard <https://itunes.apple.com/us/app/pushpin-for-pinboard/id548052590?mt=8&amp;uo=4&amp;at=1l3vbEC>`_.
 
 License
 -------
