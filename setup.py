@@ -17,9 +17,12 @@ with open(os.path.join(os.path.dirname(__file__), "README.rst")) as file:
 
     id_regex = re.compile(r"<\#([\w-]+)>")
     link_regex = re.compile(r"<(\w+)>")
+    link_alternate_regex = re.compile(r"   :target: (\w+)")
 
-    long_description = id_regex.sub(r"<https://github.com/lionheart/pinboard.py#\1", long_description)
-    long_description = link_regex.sub(r"<https://github.com/lionheart/pinboard.py/blob/master/\1", long_description)
+    long_description = id_regex.sub(r"<https://github.com/lionheart/pinboard.py#\1>", long_description)
+    long_description = link_regex.sub(r"<https://github.com/lionheart/pinboard.py/blob/master/\1>", long_description)
+    long_description = link_regex.sub(r"<https://github.com/lionheart/pinboard.py/blob/master/\1>", long_description)
+    long_description = link_alternate_regex.sub(r"   :target: https://github.com/lionheart/pinboard.py/blob/master/\1", long_description)
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
