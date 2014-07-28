@@ -5,6 +5,7 @@ import unittest
 import os
 from pinboard import metadata
 from distutils.cmd import Command
+import re
 
 try:
     from setuptools import setup
@@ -13,6 +14,12 @@ except ImportError:
 
 with open(os.path.join(os.path.dirname(__file__), "README.rst")) as file:
     long_description = file.read()
+
+    id_regex = re.compile(r"<\#([\w-]+)>")
+    link_regex = re.compile(r"<(\w+)>")
+
+    long_description = id_regex.sub(r"<https://github.com/lionheart/pinboard.py#\1", long_description)
+    long_description = link_regex.sub(r"<https://github.com/lionheart/pinboard.py/blob/master/\1", long_description)
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
