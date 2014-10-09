@@ -180,7 +180,7 @@ class PinboardCommandLineHandler(object):
     def _tags_action(self):
         def handler(response):
             max_title_length = max(len(tag) for tag in response.keys())
-            row_format = "{:<" + str(max_title_length) + "}  {:<6}"
+            row_format = u"{:<" + str(max_title_length) + "}  {:<6}"
 
             print row_format.format("Tag", "Count")
             for tag, count in response.iteritems():
