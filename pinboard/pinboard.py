@@ -54,7 +54,7 @@ class Bookmark(object):
     def save(self, update_time=False):
         params = {
             'url': self.url,
-            'description': self.description,
+            'description': self.description.encode("utf-8"),
             'extended': self.extended,
             'tags': self.tags,
             'shared': "yes" if self.shared else "no",
