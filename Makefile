@@ -1,3 +1,5 @@
+all: test publish
+
 test:
 	python setup.py test
 
