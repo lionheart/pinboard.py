@@ -44,7 +44,7 @@ class PinboardCommandLineHandler(object):
             with open(self.config_file, "r") as f:
                 config.readfp(f)
         except:
-            api_token = self._init_action()
+            api_token = self._login_action()
         else:
             api_token = config.get("authentication", "api_token")
 
