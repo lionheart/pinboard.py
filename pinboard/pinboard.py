@@ -55,8 +55,8 @@ class Bookmark(object):
         params = {
             'url': self.url,
             'description': self.description.encode("utf-8"),
-            'extended': self.extended,
-            'tags': self.tags,
+            'extended': self.extended.encode("utf-8"),
+            'tags': [tag.encode("utf-8") for tag in self.tags],
             'shared': "yes" if self.shared else "no",
             'toread': "yes" if self.toread else "no",
         }
