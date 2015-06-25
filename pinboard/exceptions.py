@@ -6,6 +6,9 @@ class PinboardError(Exception):
 class PinboardServerError(urllib2.HTTPError):
     pass
 
+class PinboardServiceUnavailable(urllib2.HTTPError):
+    pass
+
 class PinboardAuthenticationError(urllib2.HTTPError):
     pass
 
