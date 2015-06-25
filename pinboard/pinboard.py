@@ -172,9 +172,12 @@ class PinboardCall(object):
                 401: exceptions.PinboardAuthenticationError,
                 403: exceptions.PinboardForbiddenError,
                 500: exceptions.PinboardServerError,
+                503: exceptions.PinboardServiceUnavailable,
             }
-            Error = error_mappings[e.code]
-            raise Error(e.url, e.code, e.msg, e.hdrs, e.fp)
+            if e.code in error_mappings:
+                Error = error_mappings[e.code]
+                raise Error(e.url, e.code, e.msg, e.hdrs, e.fp)
+            raise
         else:
             if parse_response:
                 json_response = json.load(response)
