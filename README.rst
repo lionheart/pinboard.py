@@ -8,9 +8,6 @@ Pinboard.py
 .. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.svg?style=flat
 .. _ci: https://travis-ci.org/lionheart/pinboard.py
 
-.. |downloads| image:: http://img.shields.io/pypi/dm/pinboard.svg?style=flat
-.. _downloads: https://pypi.python.org/pypi/pinboard
-
 .. |version| image:: http://img.shields.io/pypi/v/pinboard.svg?style=flat
 .. _version: https://pypi.python.org/pypi/pinboard
 
