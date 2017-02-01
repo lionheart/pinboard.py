@@ -1,11 +1,11 @@
 import datetime
 import json
 import operator
-import urllib
-import urllib2
-import logging
 
-import exceptions
+from .compat import (
+    build_opener, iteritems, urlencode, urlparse, HTTPError, HTTPSHandler,
+    Request)
+from . import exceptions
 
 PINBOARD_API_ENDPOINT = "https://api.pinboard.in/v1/"
 PINBOARD_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
@@ -48,7 +48,7 @@ class Bookmark(object):
         return Pinboard(self.token)
 
     def __repr__(self):
-        parse_result = urllib2.urlparse.urlparse(self.url)
+        parse_result = urlparse(self.url)
         return "<Bookmark description=\"{}\" url=\"{}\">".format(self.description.encode("utf-8"), parse_result.netloc)
 
     def save(self, update_time=False):
@@ -160,14 +160,14 @@ class PinboardCall(object):
         if 'meta' in params:
             params['meta'] = 1 if kwargs['meta'] else 0
 
-        query_string = urllib.urlencode(params)
+        query_string = urlencode(params)
         final_url = "{}?{}".format(url, query_string)
 
         try:
-            request = urllib2.Request(final_url)
-            opener = urllib2.build_opener(urllib2.HTTPSHandler)
+            request = Request(final_url)
+            opener = build_opener(HTTPSHandler)
             response = opener.open(request)
-        except urllib2.HTTPError as e:
+        except HTTPError as e:
             error_mappings = {
                 401: exceptions.PinboardAuthenticationError,
                 403: exceptions.PinboardForbiddenError,
@@ -187,16 +187,16 @@ class PinboardCall(object):
                         json_response[field] = Pinboard.datetime_from_string(json_response[field])
 
                 if self.components == ["posts", "all"]:
-                    return map(lambda k: Bookmark(k, self.token), json_response)
+                    return [Bookmark(k, self.token) for k in json_response]
                 elif self.components in [["posts", "get"], ["posts", "recent"]]:
-                    json_response['posts'] = map(lambda k: Bookmark(k, self.token), json_response['posts'])
+                    json_response['posts'] = [Bookmark(k, self.token) for k in json_response['posts']]
                 elif self.components == ["posts", "dates"]:
                     json_response['dates'] = {Pinboard.date_from_string(k): int(v) \
-                            for k, v in json_response['dates'].iteritems()}
+                            for k, v in iteritems(json_response['dates'])}
                 elif self.components == ["posts", "update"]:
                     return json_response['update_time']
                 elif self.components == ["tags", "get"]:
-                    tags = [Tag(k, v) for k, v in json_response.iteritems()]
+                    tags = [Tag(k, v) for k, v in iteritems(json_response)]
                     tags.sort(key=operator.attrgetter('name'))
                     return tags
                 elif self.components == ["notes", "list"]:

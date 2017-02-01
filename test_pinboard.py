@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from pinboard import Pinboard
-import ConfigParser
 import datetime
 import os
 import unittest
@@ -9,6 +8,11 @@ import functools
 import time
 import random
 import string
+
+try:
+    from configparser import RawConfigParser
+except ImportError:
+    from ConfigParser import RawConfigParser
 
 class TestPinboardAPIPropagation(unittest.TestCase):
     def setUp(self):
@@ -45,7 +49,7 @@ class TestPinboardAPI(unittest.TestCase):
         if api_token is None:
             try:
                 config_file = os.path.expanduser("~/.pinboardrc")
-                config = ConfigParser.RawConfigParser()
+                config = RawConfigParser()
                 with open(config_file, "r") as f:
                     config.readfp(f)
             except:
@@ -104,7 +108,7 @@ class TestPinboardAPI(unittest.TestCase):
         return inner
 
     def check_meta_updated(self, bookmark_1, bookmark_2):
-        self.retry_until_true(lambda: bookmark_1 <> bookmark_2,
+        self.retry_until_true(lambda: bookmark_1 != bookmark_2,
                 msg="{} == {}".format(bookmark_1.meta, bookmark_2.meta))
 
     @ensure_last_update_time_changed
