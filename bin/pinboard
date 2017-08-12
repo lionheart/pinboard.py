@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 from subprocess import call
-import ConfigParser
+import configparser
 import argparse
 import os
 import sys
@@ -42,7 +42,7 @@ class PinboardCommandLineHandler(object):
     @property
     def pinboard(self):
         try:
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             with open(self.config_file, "r") as f:
                 config.readfp(f)
         except:
