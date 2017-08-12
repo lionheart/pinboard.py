@@ -63,7 +63,7 @@ class TestPinboardAPI(unittest.TestCase):
         response = self.pinboard.posts.get(url=self.url, meta="yes")
         return response['posts'][0]
 
-    def retry_until_true(self, fun, msg=None, max_seconds=32):
+    def retry_until_true(self, fun, msg=None, max_seconds=16):
         """
         Retries a test until it resolves to True, backing off and doubling
         the time in between retries.
@@ -104,7 +104,7 @@ class TestPinboardAPI(unittest.TestCase):
         return inner
 
     def check_meta_updated(self, bookmark_1, bookmark_2):
-        self.retry_until_true(lambda: bookmark_1 != bookmark_2,
+        self.retry_until_true(lambda: str(bookmark_1) != str(bookmark_2),
                 msg="{} == {}".format(bookmark_1.meta, bookmark_2.meta))
 
     @ensure_last_update_time_changed
@@ -164,7 +164,7 @@ class TestPinboardAPI(unittest.TestCase):
         self.pinboard.posts.delete(url=url)
 
     def test_add_and_remove_bookmark_through_api(self):
-        random_suffix = "".join(random.choice(string.letters) for i in range (6))
+        random_suffix = "".join(random.choice(string.ascii_letters) for i in range (6))
         url = "http://example.com/{}".format(random_suffix)
 
         self._test_add_bookmark_through_api(url)
