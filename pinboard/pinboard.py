@@ -62,7 +62,7 @@ class Bookmark(object):
         return Pinboard(self.token)
 
     def __repr__(self):
-        parse_result = urllib2.urlparse.urlparse(self.url)
+        parse_result = urllib.parse.urlparse(self.url)
         return "<Bookmark description=\"{}\" url=\"{}\">".format(self.description.encode("utf-8"), parse_result.netloc)
 
     def save(self, update_time=False):
@@ -206,11 +206,11 @@ class PinboardCall(object):
                     json_response['posts'] = [Bookmark(k, self.token) for k in json_response['posts']]
                 elif self.components == ["posts", "dates"]:
                     json_response['dates'] = {Pinboard.date_from_string(k): int(v) \
-                            for k, v in json_response['dates'].items()}
+                            for k, v in list(json_response['dates'].items())}
                 elif self.components == ["posts", "update"]:
                     return json_response['update_time']
                 elif self.components == ["tags", "get"]:
-                    tags = [Tag(k, v) for k, v in json_response.items()]
+                    tags = [Tag(k, v) for k, v in list(json_response.items())]
                     tags.sort(key=operator.attrgetter('name'))
                     return tags
                 elif self.components == ["notes", "list"]:
