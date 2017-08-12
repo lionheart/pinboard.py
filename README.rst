@@ -22,7 +22,7 @@ If you're using Python 3 or above:
 
 .. code:: bash
 
-   pip install pinboard
+   pip install pinboard>=2.0
 
 For Python 2.7:
 
