@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 class PinboardError(Exception):
     pass
 
-class PinboardServerError(urllib2.HTTPError):
+class PinboardServerError(urllib.error.HTTPError):
     pass
 
-class PinboardServiceUnavailable(urllib2.HTTPError):
+class PinboardServiceUnavailable(urllib.error.HTTPError):
     pass
 
-class PinboardAuthenticationError(urllib2.HTTPError):
+class PinboardAuthenticationError(urllib.error.HTTPError):
     pass
 
-class PinboardForbiddenError(urllib2.HTTPError):
+class PinboardForbiddenError(urllib.error.HTTPError):
     pass
 

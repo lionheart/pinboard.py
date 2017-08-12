@@ -15,11 +15,11 @@
 import datetime
 import json
 import operator
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import logging
 
-import exceptions
+from . import exceptions
 
 PINBOARD_API_ENDPOINT = "https://api.pinboard.in/v1/"
 PINBOARD_DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
@@ -174,14 +174,14 @@ class PinboardCall(object):
         if 'meta' in params:
             params['meta'] = 1 if kwargs['meta'] else 0
 
-        query_string = urllib.urlencode(params)
+        query_string = urllib.parse.urlencode(params)
         final_url = "{}?{}".format(url, query_string)
 
         try:
-            request = urllib2.Request(final_url)
-            opener = urllib2.build_opener(urllib2.HTTPSHandler)
+            request = urllib.request.Request(final_url)
+            opener = urllib.request.build_opener(urllib.request.HTTPSHandler)
             response = opener.open(request)
-        except urllib2.HTTPError as e:
+        except urllib.error.HTTPError as e:
             error_mappings = {
                 401: exceptions.PinboardAuthenticationError,
                 403: exceptions.PinboardForbiddenError,
@@ -201,16 +201,16 @@ class PinboardCall(object):
                         json_response[field] = Pinboard.datetime_from_string(json_response[field])
 
                 if self.components == ["posts", "all"]:
-                    return map(lambda k: Bookmark(k, self.token), json_response)
+                    return [Bookmark(k, self.token) for k in json_response]
                 elif self.components in [["posts", "get"], ["posts", "recent"]]:
-                    json_response['posts'] = map(lambda k: Bookmark(k, self.token), json_response['posts'])
+                    json_response['posts'] = [Bookmark(k, self.token) for k in json_response['posts']]
                 elif self.components == ["posts", "dates"]:
                     json_response['dates'] = {Pinboard.date_from_string(k): int(v) \
-                            for k, v in json_response['dates'].iteritems()}
+                            for k, v in json_response['dates'].items()}
                 elif self.components == ["posts", "update"]:
                     return json_response['update_time']
                 elif self.components == ["tags", "get"]:
-                    tags = [Tag(k, v) for k, v in json_response.iteritems()]
+                    tags = [Tag(k, v) for k, v in json_response.items()]
                     tags.sort(key=operator.attrgetter('name'))
                     return tags
                 elif self.components == ["notes", "list"]:

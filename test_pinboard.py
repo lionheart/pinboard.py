@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from pinboard import Pinboard
-import ConfigParser
+import configparser
 import datetime
 import os
 import unittest
@@ -25,7 +25,7 @@ class TestPinboardAPIPropagation(unittest.TestCase):
     def test_add_tag_through_website(self):
         bookmark = self.bookmark()
 
-        raw_input("Click enter after adding a tag to this bookmark through the website ({}...)".format(bookmark.url[:20]))
+        input("Click enter after adding a tag to this bookmark through the website ({}...)".format(bookmark.url[:20]))
 
         updated_bookmark = self.bookmark()
         assert(bookmark.meta != updated_bookmark.meta)
@@ -33,7 +33,7 @@ class TestPinboardAPIPropagation(unittest.TestCase):
     def test_remove_tag_through_website(self):
         bookmark = self.bookmark()
 
-        raw_input("Click enter after removing a tag from this bookmark through the website ({}...)".format(self.url[:20]))
+        input("Click enter after removing a tag from this bookmark through the website ({}...)".format(self.url[:20]))
 
         updated_bookmark = self.bookmark()
         assert(bookmark.meta != updated_bookmark.meta)
@@ -45,7 +45,7 @@ class TestPinboardAPI(unittest.TestCase):
         if api_token is None:
             try:
                 config_file = os.path.expanduser("~/.pinboardrc")
-                config = ConfigParser.RawConfigParser()
+                config = configparser.RawConfigParser()
                 with open(config_file, "r") as f:
                     config.readfp(f)
             except:
@@ -104,7 +104,7 @@ class TestPinboardAPI(unittest.TestCase):
         return inner
 
     def check_meta_updated(self, bookmark_1, bookmark_2):
-        self.retry_until_true(lambda: bookmark_1 <> bookmark_2,
+        self.retry_until_true(lambda: bookmark_1 != bookmark_2,
                 msg="{} == {}".format(bookmark_1.meta, bookmark_2.meta))
 
     @ensure_last_update_time_changed
