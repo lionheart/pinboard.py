@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # vim: set filetype=python
 
+from __future__ import print_function
+
 from subprocess import call
 import ConfigParser
 import argparse
@@ -56,7 +58,7 @@ class PinboardCommandLineHandler(object):
             try:
                 api_token = raw_input("Enter your Pinboard API token: ")
             except KeyboardInterrupt:
-                print
+                print()
                 break
         else:
             config = ConfigParser.RawConfigParser()
@@ -66,28 +68,28 @@ class PinboardCommandLineHandler(object):
             with open(self.config_file, "wb") as f:
                 config.write(f)
 
-            print "Saved Pinboard credentials to ~/.pinboardrc"
+            print("Saved Pinboard credentials to ~/.pinboardrc")
             return api_token
 
     def _call_api_and_catch_exceptions(self, fun, handler=None, *args, **kwargs):
         try:
             response = fun(parse_response=False, *args, **kwargs)
         except pinboard.PinboardServerError:
-            print "HTTP Error 500: Internal Server Error. Either you have " \
+            print("HTTP Error 500: Internal Server Error. Either you have " \
                     "provided invalid credentials or the Pinboard API " \
                     "encountered an internal exception while fulfilling " \
-                    "the request."
+                    "the request.")
         else:
             if self.namespace.raw:
-                print response.read()
+                print(response.read())
             else:
                 json_response = json.load(response)
                 if handler is None:
-                    print json.dumps(json_response, indent=4)
+                    print(json.dumps(json_response, indent=4))
                 else:
                     value = handler(json_response)
                     if value is not None:
-                        print value
+                        print(value)
 
     def _bookmarks_action(self):
         kwargs = {}
@@ -182,9 +184,9 @@ class PinboardCommandLineHandler(object):
             max_title_length = max(len(tag) for tag in response.keys())
             row_format = u"{:<" + str(max_title_length) + "}  {:<6}"
 
-            print row_format.format("Tag", "Count")
+            print(row_format.format("Tag", "Count"))
             for tag, count in response.iteritems():
-                print row_format.format(tag, count)
+                print(row_format.format(tag, count))
 
         self._call_api_and_catch_exceptions(self.pinboard.tags.get, handler)
 
@@ -207,13 +209,13 @@ class PinboardCommandLineHandler(object):
 
     def _rss_key_action(self):
         def handler(response):
-            print response['result']
+            print(response['result'])
 
         self._call_api_and_catch_exceptions(self.pinboard.user.secret)
 
     def _api_token_action(self):
         def handler(response):
-            print response['result']
+            print(response['result'])
 
         self._call_api_and_catch_exceptions(self.pinboard.user.api_token)
 
@@ -228,18 +230,18 @@ class PinboardCommandLineHandler(object):
 
             row_format = "{:<20}  {:<" + str(max_title_length) + "}  {:<" + str(max_length) + "}  {:<24}  {:<24}"
 
-            print row_format.format(*headers)
+            print(row_format.format(*headers))
             for note in notes:
                 created_at = pinboard.Pinboard.datetime_from_string(note['created_at'])
                 updated_at = pinboard.Pinboard.datetime_from_string(note['updated_at'])
 
-                print row_format.format(
+                print(row_format.format(
                     note['id'],
                     note['title'],
                     note['length'],
                     created_at.strftime("%c"),
                     updated_at.strftime("%c")
-                )
+                ))
 
         self._call_api_and_catch_exceptions(self.pinboard.notes.list)
 
