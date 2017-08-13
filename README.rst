@@ -3,13 +3,16 @@ Pinboard.py
 
 .. https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
 
-|ci|_ |version|_
+|ci|_ |version|_ |versions|_
 
 .. |ci| image:: http://img.shields.io/travis/lionheart/pinboard.py.svg?style=flat
 .. _ci: https://travis-ci.org/lionheart/pinboard.py
 
 .. |version| image:: http://img.shields.io/pypi/v/pinboard.svg?style=flat
 .. _version: https://pypi.python.org/pypi/pinboard
+
+.. |versions| image:: https://img.shields.io/pypi/pyversions/pinboard.svg?style=flat
+.. _versions: https://pypi.python.org/pypi/pinboard
 
 Pinboard.py is an easy-to-use and fully-functional Python wrapper and `command-line utility <#command-line>`_ for the Pinboard.in API.
 
