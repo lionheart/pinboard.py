@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # vim: set filetype=python
 
-from __future__ import print_function
-
 from subprocess import call
 import configparser
 import argparse
@@ -46,7 +44,7 @@ class PinboardCommandLineHandler(object):
             with open(self.config_file, "r") as f:
                 config.readfp(f)
         except:
-            api_token = self._login_action()
+            api_token = os.environ.get('PINBOARD_TOKEN') or self._login_action()
         else:
             api_token = config.get("authentication", "api_token")
 
@@ -56,16 +54,16 @@ class PinboardCommandLineHandler(object):
         api_token = ""
         while ":" not in api_token:
             try:
-                api_token = raw_input("Enter your Pinboard API token: ")
+                api_token = input("Enter your Pinboard API token: ")
             except KeyboardInterrupt:
                 print()
                 break
         else:
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.add_section("authentication")
             config.set("authentication", "api_token", api_token)
 
-            with open(self.config_file, "wb") as f:
+            with open(self.config_file, "w") as f:
                 config.write(f)
 
             print("Saved Pinboard credentials to ~/.pinboardrc")
