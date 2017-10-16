@@ -248,7 +248,7 @@ One more note--you might have noticed that there is no "title" attribute for boo
 Command Line
 ------------
 
-In addition to providing full Python-level support for the Pinboard API, pinboard.py also comes bundled with a handy command-line utility called "pinboard". Just type "pinboard -h" for a full list of supported commands. To get started, type "pinboard login" and have your API token ready.
+In addition to providing full Python-level support for the Pinboard API, pinboard.py also comes bundled with a handy command-line utility called "pinboard". Just type "pinboard -h" for a full list of supported commands. Your API token needs to be available to pinboard.py, and can be entered in several ways. Firstly pinboard.py will try to read the ~/.pinboardrc configuration file. If not present then it will try to read an environment variable called `PINBOARD_TOKEN`. Lastly it will show a shell prompt for the user to enter their token (you can immediately force the latter behavior by typing `pinboard login`).
 
 All of the commands pre-process and indent the JSON output. If you would like to shoot the raw response data to stdout, just pass "--raw" before the subcommand (e.g., "pinboard --raw bookmarks").
 
@@ -357,6 +357,23 @@ You can print a full list of pinboard commands by passing the "-h" flag.
      --count COUNT
      --offset OFFSET
 
+
+Using the CLI in Docker
+'''''''''''''''''''''''
+
+To build the CLI in Docker:
+
+.. code:: sh
+
+   $ cd <path_to_pinboard>/bin
+   $ docker build -t pinboard .
+
+To run the CLI in Docker after building:
+
+.. code:: sh
+
+   $ export PINBOARD_TOKEN=<your_pinboard_token>
+   $ docker run -ti -e PINBOARD_TOKEN pinboard bookmarks --count 10
 
 Support
 -------
