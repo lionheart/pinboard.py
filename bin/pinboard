@@ -354,6 +354,11 @@ if __name__ == "__main__":
     subparsers.add_parser("api-token", help="user/api_token")
 
     args = parser.parse_args()
-    handler = PinboardCommandLineHandler(args)
-    handler.run()
+
+    if args.subparser == None:
+        parser.print_usage()
+        sys.exit(1)
+    else:
+        handler = PinboardCommandLineHandler(args)
+        handler.run()
 
