@@ -1,5 +1,4 @@
-Pinboard.py
-===========
+.. image:: meta/repo-banner.png
 
 .. https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
 
