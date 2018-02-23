@@ -1,5 +1,7 @@
 .. image:: meta/repo-banner.png
 
+.. image:: meta/repo-banner-bottom.png
+
 .. https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
 
 |ci|_ |version|_ |versions|_
