@@ -16,7 +16,6 @@ import datetime
 import json
 import operator
 import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
 import logging
 
 from . import exceptions
