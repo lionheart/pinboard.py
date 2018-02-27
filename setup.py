@@ -20,13 +20,14 @@ import os
 from pinboard import metadata
 from distutils.cmd import Command
 import re
+import codecs
 
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
-with open(os.path.join(os.path.dirname(__file__), "README.rst")) as file:
+with codecs.open(os.path.join(os.path.dirname(__file__), "README.rst"), encoding="utf-8") as file:
     long_description = file.read()
 
     id_regex = re.compile(r"<\#([\w-]+)>")
