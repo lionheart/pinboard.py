@@ -183,7 +183,7 @@ class PinboardCommandLineHandler(object):
             row_format = u"{:<" + str(max_title_length) + "}  {:<6}"
 
             print(row_format.format("Tag", "Count"))
-            for tag, count in response.iteritems():
+            for tag, count in response.items():
                 print(row_format.format(tag, count))
 
         self._call_api_and_catch_exceptions(self.pinboard.tags.get, handler)
