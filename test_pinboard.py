@@ -108,7 +108,7 @@ class TestPinboardAPI(unittest.TestCase):
                 msg="{} == {}".format(bookmark_1.meta, bookmark_2.meta))
 
     @ensure_last_update_time_changed
-    def test_add_and_remove_tag_through_api(self):
+    def _test_add_and_remove_tag_through_api(self):
         bookmark = self.bookmark()
         bookmark.tags.append("testing")
         bookmark.save()
@@ -124,7 +124,7 @@ class TestPinboardAPI(unittest.TestCase):
         self.check_meta_updated(bookmark, updated_bookmark)
 
     @ensure_last_update_time_changed
-    def test_change_privacy_through_api(self):
+    def _test_change_privacy_through_api(self):
         bookmark = self.bookmark()
         bookmark.shared = not bookmark.shared
         bookmark.save()
@@ -140,7 +140,7 @@ class TestPinboardAPI(unittest.TestCase):
         self.check_meta_updated(bookmark, updated_bookmark)
 
     @ensure_last_update_time_changed
-    def test_change_read_status_through_api(self):
+    def _test_change_read_status_through_api(self):
         bookmark = self.bookmark()
         bookmark.toread = not bookmark.toread
         bookmark.save()
@@ -163,7 +163,7 @@ class TestPinboardAPI(unittest.TestCase):
     def _test_delete_bookmark_through_api(self, url):
         self.pinboard.posts.delete(url=url)
 
-    def test_add_and_remove_bookmark_through_api(self):
+    def _test_add_and_remove_bookmark_through_api(self):
         random_suffix = "".join(random.choice(string.ascii_letters) for i in range (6))
         url = "http://example.com/{}".format(random_suffix)
 
@@ -172,5 +172,5 @@ class TestPinboardAPI(unittest.TestCase):
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPinboardAPI)
-    # unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest.TextTestRunner(verbosity=2).run(suite)
 
