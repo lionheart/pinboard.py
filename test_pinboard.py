@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from pinboard import Pinboard
 import configparser
@@ -172,5 +172,5 @@ class TestPinboardAPI(unittest.TestCase):
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPinboardAPI)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
 
