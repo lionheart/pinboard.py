@@ -347,7 +347,7 @@ If you like this library, you might want to check out [Pushpin for Pinboard](htt
 
 ## License [![License][license-image]][license-url]
 
-Apache License, Version 2.0. See [LICENSE](license-url) for details.
+Apache License, Version 2.0. See [LICENSE][license-url] for details.
 
 [license-image]: http://img.shields.io/pypi/l/pinboard.py.svg?style=flat
 [license-url]: LICENSE
