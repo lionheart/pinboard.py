@@ -163,7 +163,8 @@ class PinboardCall(object):
         for field in Pinboard.SPACE_DELIMITED_FIELDS:
             if field in kwargs:
                 if isinstance(kwargs[field], list):
-                    params[field] = ' '.join(kwargs[field])
+                    value = map(lambda k: k.decode("utf8"), kwargs[field])
+                    params[field] = ' '.join(value)
                 else:
                     params[field] = kwargs[field]
 
