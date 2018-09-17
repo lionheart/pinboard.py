@@ -23,9 +23,13 @@ clean:
 
 test:
 	python setup.py test
+	python3 setup.py test
 
 update_readme:
 	pandoc --from=markdown --to=rst --output=README.rst README.md
+	-git reset
+	-git add README.rst
+	-git commit -m "update README.rst from README.md"
 
 update_version:
 	sed -i "" "s/\(__version__[ ]*=\).*/\1 \"$(VERSION)\"/g" $(METADATA_FILE)
