@@ -62,14 +62,14 @@ class Bookmark(object):
 
     def __repr__(self):
         parse_result = urllib.parse.urlparse(self.url)
-        return "<Bookmark description=\"{}\" url=\"{}\">".format(self.description.encode("utf-8"), parse_result.netloc)
+        return "<Bookmark description=\"{}\" url=\"{}\">".format(self.description, parse_result.netloc)
 
     def save(self, update_time=False):
         params = {
             'url': self.url,
-            'description': self.description.encode("utf-8"),
-            'extended': self.extended.encode("utf-8"),
-            'tags': [tag.encode("utf-8") for tag in self.tags],
+            'description': self.description,
+            'extended': self.extended,
+            'tags': self.tags,
             'shared': "yes" if self.shared else "no",
             'toread': "yes" if self.toread else "no",
         }
