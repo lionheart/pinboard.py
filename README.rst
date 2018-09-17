@@ -385,7 +385,7 @@ Pinboard <https://itunes.apple.com/us/app/pushpin-for-pinboard/id548052590?mt=8&
 License |License|
 -----------------
 
-Apache License, Version 2.0. See `LICENSE <license-url>`__ for details.
+Apache License, Version 2.0. See `LICENSE <LICENSE>`__ for details.
 
 .. raw:: html
 
