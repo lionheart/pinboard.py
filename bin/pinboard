@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!python
 # vim: set filetype=python
 
 from subprocess import call
