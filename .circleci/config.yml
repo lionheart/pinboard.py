@@ -1,7 +1,9 @@
 version: 2.1
 jobs:
   test:
-    machine: true
+    machine:
+      true
+      # image: circleci/classic:2017-01
     steps:
       - checkout
       - run: python setup.py test
