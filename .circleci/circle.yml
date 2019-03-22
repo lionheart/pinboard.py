@@ -1,6 +1,7 @@
 version: 2.1
 jobs:
   test:
+    machine: true
     steps:
       - checkout
       - run: python setup.py test
