@@ -1,8 +1,7 @@
-version: 2
+version: 2.1
 jobs:
   test:
     steps:
-      - run:
-        command: |
-          python setup.py test
+      - checkout
+      - run: python setup.py test
 
