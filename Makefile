@@ -22,7 +22,6 @@ clean:
 	rm -rf dist/
 
 test:
-	python setup.py test
 	python3 setup.py test
 
 update_readme:
