@@ -43,7 +43,6 @@ update_version:
 	git push --tags
 
 publish: clean update_readme update_version
-	python setup.py bdist_wheel --universal
 	python3 setup.py bdist_wheel --universal
 	gpg --detach-sign -a dist/*.whl
 	twine upload dist/*
