@@ -29,7 +29,7 @@ To get started, you're going to need to get your Pinboard API token from the [pa
 
 ```pycon
 >>> import pinboard
->>> pb = pinboard.Pinboard(api_token)
+>>> pb = pinboard.Pinboard('API_TOKEN')
 ```
 
 Once you've done this, you can now use the `pb` object to make calls to the Pinboard API. Here are some examples:
