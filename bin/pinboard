@@ -42,7 +42,7 @@ class PinboardCommandLineHandler(object):
         try:
             config = configparser.RawConfigParser()
             with open(self.config_file, "r") as f:
-                config.readfp(f)
+                config.read_file(f)
         except:
             api_token = os.environ.get('PINBOARD_TOKEN') or self._login_action()
         else:
