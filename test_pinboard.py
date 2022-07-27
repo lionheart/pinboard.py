@@ -47,7 +47,7 @@ class TestPinboardAPI(unittest.TestCase):
                 config_file = os.path.expanduser("~/.pinboardrc")
                 config = configparser.RawConfigParser()
                 with open(config_file, "r") as f:
-                    config.readfp(f)
+                    config.read_file(f)
             except:
                 raise
             else:
