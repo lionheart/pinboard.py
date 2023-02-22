@@ -195,9 +195,10 @@ class PinboardCall(object):
             if parse_response:
                 json_response = json.load(response)
 
-                for field in Pinboard.DATE_FIELDS:
-                    if field in json_response:
-                        json_response[field] = Pinboard.datetime_from_string(json_response[field])
+                if "tags" in self.components:
+                    for field in Pinboard.DATE_FIELDS:
+                        if field in json_response:
+                            json_response[field] = Pinboard.datetime_from_string(json_response[field])
 
                 if self.components == ["posts", "all"]:
                     return [Bookmark(k, self.token) for k in json_response]
