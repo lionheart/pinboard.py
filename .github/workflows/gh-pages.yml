@@ -2,19 +2,19 @@ name: pinboard.py test
 on:
   push:
     branches:
-      - main  # Set a branch that will trigger a deployment
+      - main # Set a branch that will trigger a deployment
   pull_request:
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4.5.0
-          with:
-            python-version: '3.11'
+        with:
+          python-version: "3.11"
 
       - name: test
         run: python setup.py test
