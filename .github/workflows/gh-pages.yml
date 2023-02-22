@@ -1,10 +1,5 @@
 name: pinboard.py test
-on:
-  push:
-    branches:
-      - main # Set a branch that will trigger a deployment
-  pull_request:
-
+on: [push]
 jobs:
   test:
     runs-on: ubuntu-22.04
