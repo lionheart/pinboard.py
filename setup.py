@@ -74,7 +74,6 @@ setup(
     name='pinboard',
     version=metadata.__version__,
     url="http://github.com/lionheart/pinboard.py",
-    long_description=long_description,
     description="A Python wrapper for Pinboard.in",
     classifiers=classifiers,
     keywords="pinboard",
