@@ -16,13 +16,19 @@
 
 METADATA_FILE := $(shell find . -name "metadata.py" -depth 2)
 
+.PHONY: clean test update_readme update_version publish
+
 all: clean test publish
 
 clean:
 	rm -rf dist/
 
 test:
+	python setup.py test
 	python3 setup.py test
+
+install:
+	python setup.py install
 
 update_readme:
 	pandoc --from=markdown --to=rst --output=README.rst README.md
@@ -43,6 +49,7 @@ update_version:
 	git push --tags
 
 publish: clean update_readme update_version
+	python setup.py bdist_wheel --universal
 	python3 setup.py bdist_wheel --universal
 	gpg --detach-sign -a dist/*.whl
 	twine upload dist/*
