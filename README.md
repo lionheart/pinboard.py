@@ -1,7 +1,6 @@
 ![](meta/repo-banner.png)
 [![](meta/repo-banner-bottom.png)][lionheart-url]
 
-[![CI Status][ci-image]][ci-url]
 [![Version][version-image]][version-url]
 [![Versions][versions-image]][versions-url]
 
@@ -351,9 +350,6 @@ Apache License, Version 2.0. See [LICENSE][license-url] for details.
 
 [license-image]: http://img.shields.io/pypi/l/pinboard.py.svg?style=flat
 [license-url]: LICENSE
-
-[ci-image]: https://circleci.com/gh/lionheart/pinboard.py.svg?style=svg&circle-token=d50700e1c75836063a7951f80ab1913cf6447acf
-[ci-url]: https://circleci.com/gh/lionheart/pinboard.py
 
 <!-- https://circleci.com/gh/lionheart/pinboard.py/tree/master.png?circle-token=d50700e1c75836063a7951f80ab1913cf6447acf -->
 
